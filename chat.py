@@ -248,7 +248,10 @@ if prompt := st.chat_input("What is up?"):
           st.warning(f"Your input is too long and will be truncated to fit the model's limit of 500 tokens.")
           prompt = ' '.join(prompt.split()[:500])  # Truncate the input
         response = st.session_state.retrieval_chain.run(prompt)
+        matching_docs = db.as_retriever(search_type='mmr').get_relevant_documents(prompt)
+        sources = [doc.metadata.get("source", doc.metadata) for doc in matching_docs] 
         st.markdown(response)
+        st.markdown(sources)
     st.session_state.messages.append({"role": "assistant", "content": response})
 # Sidebar Clear Chat Button
 st.sidebar.button("Clear Chat", on_click=lambda: st.session_state.messages.clear())
