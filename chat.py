@@ -19,6 +19,7 @@ os.environ['GROQ_API_KEY'] = st.secrets['GROQ_API_KEY']
 warnings.filterwarnings("ignore")
 st.title("RAG - AI 4 CI")
 
+uploaded_file = st.sidebar.file_uploader("Upload a document", type=["txt", "pdf", "docx"])
 
 chain_types = ['stuff',"refine", "map_reduce", "map_rerank"]
 selected_chain_type = st.sidebar.selectbox("Choose a chain type:", options=chain_types)
