@@ -251,7 +251,13 @@ if prompt := st.chat_input("What is up?"):
         matching_docs = db.as_retriever(search_type='mmr').get_relevant_documents(prompt)
         sources = [doc.metadata.get("source", doc.metadata) for doc in matching_docs] 
         st.markdown(response)
-        st.markdown(sources)
+        # Display sources
+        if sources:
+            st.markdown("### Sources:")
+            for source in sources:
+                st.markdown(f"- {source}")
+        else:
+            st.markdown("No sources found.")
     st.session_state.messages.append({"role": "assistant", "content": response})
 # Sidebar Clear Chat Button
 st.sidebar.button("Clear Chat", on_click=lambda: st.session_state.messages.clear())
