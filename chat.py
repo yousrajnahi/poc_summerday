@@ -12,6 +12,7 @@ from langchain.memory import ConversationBufferMemory
 from pinecone import Pinecone, ServerlessSpec
 from langchain.output_parsers.regex import RegexParser
 import warnings
+import io
 
 
 
@@ -25,11 +26,11 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter,Language
 uploaded_file = st.sidebar.file_uploader("Upload a document:", type=["txt"])
 # Function to process uploaded file
 def process_uploaded_file(uploaded_file):
-    loader = TextLoader(uploaded_file)
-    documents = loader.load()
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=300,chunk_overlap=100,length_function=len,add_start_index=True)
-    chunks = text_splitter.split_documents(documents)
-    return chunks
+  loader = TextLoader(io.StringIO(uploaded_file.getvalue().decode("utf-8")))
+  documents = loader.load()
+  text_splitter = RecursiveCharacterTextSplitter(chunk_size=300,chunk_overlap=100,length_function=len,add_start_index=True)
+  chunks = text_splitter.split_documents(documents)
+  return chunks
 
 
 
@@ -39,14 +40,6 @@ os.environ['GROQ_API_KEY'] = st.secrets['GROQ_API_KEY']
 warnings.filterwarnings("ignore")
 st.title("RAG - AI 4 CI")
 
-
-# Button to process and add uploaded document
-if st.sidebar.button("Process and Add Document"):
-    chunks = process_uploaded_file(uploaded_file)
-    if chunks:
-        with st.spinner("Processing and adding document..."):
-            db.add_documents(chunks)
-        st.success("Document added successfully!")
 
 chain_types = ['stuff',"refine", "map_reduce", "map_rerank"]
 selected_chain_type = st.sidebar.selectbox("Choose a chain type:", options=chain_types)
@@ -67,6 +60,14 @@ namespace = "summerday-space"
 embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 db = PineconeVectorStore(index_name=index_name, embedding=embeddings, namespace=namespace)
 
+
+# Button to process and add uploaded document
+if st.sidebar.button("Process and Add Document"):
+    chunks = process_uploaded_file(uploaded_file)
+    if chunks:
+        with st.spinner("Processing and adding document..."):
+            db.add_documents(chunks)
+        st.success("Document added successfully!")
 
 # Ensure we only initialize once and reinitialize if needed
 if 'initialized' not in st.session_state or st.session_state.selected_chain_type != selected_chain_type or st.session_state.selected_model != selected_model:
