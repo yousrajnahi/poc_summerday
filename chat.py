@@ -29,6 +29,16 @@ model_options = ["gemma-7b-it","mixtral-8x7b-32768","llama3-70b-8192","llama3-8b
 default_model = "llama3-70b-8192"  # Default model
 selected_model = st.sidebar.selectbox("Choose a model:", options=model_options, index=model_options.index(default_model))
 
+# Setup Pinecone
+pc = Pinecone(api_key=os.environ['PINECONE_API_KEY'])
+index_name = "docs-rag-summerday-halluc"
+if index_name not in pc.list_indexes().names():
+    pc.create_index(name=index_name, dimension=384, metric="cosine", spec=ServerlessSpec(cloud="aws", region="us-east-1"))
+
+namespace = "summerday-space-halluc"
+embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+db = PineconeVectorStore(index_name=index_name, embedding=embeddings, namespace=namespace)
+
 
 # Ensure we only initialize once and reinitialize if needed
 if 'initialized' not in st.session_state or st.session_state.selected_chain_type != selected_chain_type or st.session_state.selected_model != selected_model:
@@ -212,16 +222,7 @@ if 'initialized' not in st.session_state or st.session_state.selected_chain_type
       }}
     ####
     
-    # Setup Pinecone
-    pc = Pinecone(api_key=os.environ['PINECONE_API_KEY'])
-    index_name = "docs-rag-summerday-halluc"
-    if index_name not in pc.list_indexes().names():
-        pc.create_index(name=index_name, dimension=384, metric="cosine", spec=ServerlessSpec(cloud="aws", region="us-east-1"))
-
-    namespace = "summerday-space-halluc"
-    embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
-    db = PineconeVectorStore(index_name=index_name, embedding=embeddings, namespace=namespace)
-
+    
     # Setup Groq
     llm = ChatGroq(temperature=0, model_name=selected_model)
     
