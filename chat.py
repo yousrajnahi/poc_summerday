@@ -31,11 +31,11 @@ selected_model = st.sidebar.selectbox("Choose a model:", options=model_options, 
 
 # Setup Pinecone
 pc = Pinecone(api_key=os.environ['PINECONE_API_KEY'])
-index_name = "docs-rag-summerday-halluc"
+index_name = "docs-rag-summerday"
 if index_name not in pc.list_indexes().names():
     pc.create_index(name=index_name, dimension=384, metric="cosine", spec=ServerlessSpec(cloud="aws", region="us-east-1"))
 
-namespace = "summerday-space-halluc"
+namespace = "summerday-space"
 embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 db = PineconeVectorStore(index_name=index_name, embedding=embeddings, namespace=namespace)
 
@@ -250,7 +250,8 @@ if prompt := st.chat_input("What is up?"):
           prompt = ' '.join(prompt.split()[:500])  # Truncate the input
         response = st.session_state.retrieval_chain.run(prompt)
         matching_docs = db.as_retriever(search_type='mmr').get_relevant_documents(prompt)
-        sources = [doc.metadata.get("source", doc.metadata) for doc in matching_docs] 
+        sources = [doc.metadata.get("source", doc.metadata) for doc in matching_docs]
+        st.markdown(response)
         st.markdown(str(sources))
     st.session_state.messages.append({"role": "assistant", "content": response})
 # Sidebar Clear Chat Button
