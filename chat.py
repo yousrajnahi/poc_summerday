@@ -12,7 +12,7 @@ from langchain.memory import ConversationBufferMemory
 from pinecone import Pinecone, ServerlessSpec
 from langchain.output_parsers.regex import RegexParser
 import warnings
-import io
+
 
 
 
@@ -26,7 +26,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter,Language
 uploaded_file = st.sidebar.file_uploader("Upload a document:", type=["txt"])
 # Function to process uploaded file
 def process_uploaded_file(uploaded_file):
-  loader = TextLoader(io.StringIO(uploaded_file.getvalue().decode("utf-8")))
+  loader = TextLoader(uploaded_file)
   documents = loader.load()
   text_splitter = RecursiveCharacterTextSplitter(chunk_size=300,chunk_overlap=100,length_function=len,add_start_index=True)
   chunks = text_splitter.split_documents(documents)
