@@ -12,8 +12,12 @@ from langchain.memory import ConversationBufferMemory
 from pinecone import Pinecone, ServerlessSpec
 from langchain.output_parsers.regex import RegexParser
 import warnings
+import subprocess
 
-
+subprocess.run(['sudo', 'apt-get', 'update'], check=True)
+# Run 'sudo apt-get install libgl1-mesa-glx'
+subprocess.run(['sudo', 'apt-get', 'install', '-y', 'libgl1-mesa-glx'], check=True)
+        
 
 
 
