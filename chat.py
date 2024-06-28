@@ -23,8 +23,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter,Language
 import os, tempfile
 from pathlib import Path
 
-TMP_DIR = Path(__file__).resolve().parent.joinpath('data', 'tmp')
-TMP_DIR.mkdir(parents=True, exist_ok=True)
+
 
 def load_documents():
     loader = DirectoryLoader('/_stcore/upload_file/', glob='**/*.pdf')
@@ -50,19 +49,10 @@ db = PineconeVectorStore(index_name=index_name, embedding=embeddings, namespace=
 source_docs = st.sidebar.file_uploader("Upload a document:",accept_multiple_files=True)  
 
 def process_documents():
-    for source_doc in source_docs:
-        with tempfile.NamedTemporaryFile(delete=False, dir=TMP_DIR, suffix='.pdf') as tmp_file:
-            tmp_file.write(source_doc.read())
-        
-        documents = load_documents()
-        
-        for _file in TMP_DIR.iterdir():
-            temp_file = TMP_DIR.joinpath(_file)
-            temp_file.unlink()
-        
-        texts = split_documents(documents)
-        db.add_documents(texts)
-        
+    documents = load_documents()
+    chunks = split_documents(documents)
+    db.add_documents(chunks)
+
 
   
 
