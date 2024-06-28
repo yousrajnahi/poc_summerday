@@ -20,13 +20,15 @@ import warnings
 from langchain_community.document_loaders import DirectoryLoader
 from langchain.schema import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter,Language
-import os, tempfile
+import tempfile
 from pathlib import Path
 
-
+# Define temporary directory for uploaded files
+TMP_DIR = Path(__file__).resolve().parent.joinpath('data', 'tmp')
+TMP_DIR.mkdir(parents=True, exist_ok=True)
 
 def load_documents():
-    loader = DirectoryLoader('/_stcore/upload_file/', glob='**/*.pdf')
+    loader = DirectoryLoader(TMP_DIR.as_posix(), glob='**/*.pdf')
     documents = loader.load()
     return documents
 
@@ -46,17 +48,35 @@ namespace = "summerday-space"
 embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 db = PineconeVectorStore(index_name=index_name, embedding=embeddings, namespace=namespace)
 
-source_docs = st.sidebar.file_uploader("Upload a document:",accept_multiple_files=True)  
 
-def process_documents():
-    documents = load_documents()
-    chunks = split_documents(documents)
-    db.add_documents(chunks)
+# File uploader in the sidebar
+uploaded_files = st.sidebar.file_uploader("Upload Documents", type="pdf", accept_multiple_files=True)
 
+if uploaded_files:
+    for uploaded_file in uploaded_files:
+        # Create a temporary file
+        with tempfile.NamedTemporaryFile(delete=False, dir=TMP_DIR.as_posix(), suffix='.pdf') as tmp_file:
+            tmp_file.write(uploaded_file.getvalue())
+    
+    # Process documents
+    if st.button("Process Documents"):
+        with st.spinner("Processing documents..."):
+            documents = load_documents()
+            texts = split_documents(documents)
+            
+            # Here you would typically add the texts to your vector store
+            db.add_documents(texts)
+            
+            st.success(f"Processed {len(texts)} text chunks")
+        
+        # Clean up temporary files
+        for file in TMP_DIR.iterdir():
+            file.unlink()
 
-  
+        # Clean up temporary files
+                for file in TMP_DIR.iterdir():
+                    file.unlink()
 
-st.sidebar.button("Process and Add Documents", on_click=process_documents)
 
 
 
