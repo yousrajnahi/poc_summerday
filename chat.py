@@ -24,7 +24,7 @@ import os, tempfile
 from pathlib import Path
 
 TMP_DIR = Path(__file__).resolve().parent.joinpath('data', 'tmp')
-
+TMP_DIR.mkdir(parents=True, exist_ok=True)
 
 def load_documents():
     loader = DirectoryLoader(TMP_DIR, glob='**/*.pdf')
