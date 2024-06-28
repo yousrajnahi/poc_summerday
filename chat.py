@@ -23,14 +23,49 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter,Language
 import os
 import tempfile
 from pdfminer.high_level import extract_text
+from langchain_community.document_loaders import (UnstructuredFileLoader,
+                                                  PDFMinerLoader,
+                                                  TextLoader,
+                                                  UnstructuredXMLLoader,
+                                                  UnstructuredHTMLLoader,
+                                                  UnstructuredMarkdownLoader,
+                                                  UnstructuredEmailLoader)
+
+
+import shutil
+import matplotlib.pyplot as plt
+
+def organize_files_by_extension(source_directory):
+    # Initialize an empty dictionary to hold files organized by their extensions
+    organized_dict = {}
+    # Walk through all the directories and files in the source directory
+    for root, dirs, files in os.walk(source_directory):
+        for filename in files:
+            # Get the full file path
+            file_path = os.path.join(root, filename)
+            # Split the file name to get the extension
+            _, extension = os.path.splitext(filename)
+            # Check if the file has an extension and is not a hidden file
+            if extension and not filename.startswith('.'):
+                # Normalize the extension by removing the leading dot and converting to lowercase
+                extension_folder = extension[1:].lower()
+                # If the extension is not already a key in the dictionary, add it with an empty list
+                if extension_folder not in organized_dict:
+                    organized_dict[extension_folder] = []
+                # Append the file path to the list corresponding to its extension
+                organized_dict[extension_folder].append(file_path)
+    # Return the dictionary containing files organized by their extensions
+    return organized_dict
 
 
 
-def load_documents(uploaded_file):
-    loader = PDFMinerLoader(uploaded_file)
+def load_documents(DATA_PATH, glob_pattern,loader_class, loader_args):
+  # Create a DirectoryLoader instance with specified parameters.
+    loader = DirectoryLoader(DATA_PATH, glob=glob_pattern, show_progress=True,use_multithreading=True,loader_cls = loader_class, loader_kwargs =loader_args)
+    # Load the documents using the configured loader and return them.
     documents = loader.load()
     return documents
-
+    
 def split_documents(documents):
     text_splitter =  RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
     texts = text_splitter.split_documents(documents)
@@ -51,6 +86,24 @@ db = PineconeVectorStore(index_name=index_name, embedding=embeddings, namespace=
 # File uploader in the sidebar
 uploaded_files = st.sidebar.file_uploader("Upload Documents", accept_multiple_files=True)
 
+
+# Define a mapping from file extensions to loader classes
+loader_cls_map = {
+    'md': UnstructuredMarkdownLoader,
+    'txt': TextLoader,
+    'pdf': PDFMinerLoader,
+    'xml': UnstructuredXMLLoader,
+    'html': UnstructuredHTMLLoader,
+    'eml': UnstructuredEmailLoader,
+    'default': UnstructuredFileLoader
+
+}
+
+# Define a mapping from file extensions to arguments loader
+loader_kwargs_map = {
+
+                     'default': None
+}
 
 # Directory where you want to save the files
 directory = "./Internal_data"
@@ -75,11 +128,16 @@ if uploaded_files:
         
         # Assuming db.add_documents is a method to add texts to your database
         #db.add_documents(chunks)
-    # Create a DirectoryLoader instance with specified parameters.
-    loader = DirectoryLoader(directory)
-    # Load the documents using the configured loader and return them.
-    documents = loader.load()
-    st.write(documents)
+    extensions_dict = organize_files_by_extension(directory)
+    for ext, files in extensions_dict.items():
+        # Create the glob pattern for the files of this extension
+        glob_pattern = f'**/*.{ext}'
+        loader_class = loader_cls_map.get(ext, loader_cls_map['default'])
+        print("Extension: ",ext)
+        print("Loader: ",loader_class)
+        loader_args = loader_kwargs_map.get(ext, loader_kwargs_map['default'])
+        documents = load_documents(data_directory, glob_pattern, loader_class, loader_args)
+   
 
 
 
