@@ -20,18 +20,12 @@ import warnings
 from langchain_community.document_loaders import DirectoryLoader
 from langchain.schema import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter,Language
-import tempfile
-from pathlib import Path
 
-import os
-os.environ['OPENCV_IO_ENABLE_JASPER'] = 'true' 
-
-# Define temporary directory for uploaded files
-TMP_DIR = Path(__file__).resolve().parent.joinpath('data', 'tmp')
-TMP_DIR.mkdir(parents=True, exist_ok=True)
+folder_path = 'DATA'
+os.makedirs(folder_path, exist_ok=True)
 
 def load_documents():
-    loader = DirectoryLoader(TMP_DIR)
+    loader = DirectoryLoader(folder_path)
     documents = loader.load()
     return documents
 
@@ -53,28 +47,21 @@ db = PineconeVectorStore(index_name=index_name, embedding=embeddings, namespace=
 
 
 # File uploader in the sidebar
-uploaded_files = st.sidebar.file_uploader("Upload Documents", type="pdf", accept_multiple_files=True)
+uploaded_file = st.sidebar.file_uploader("Upload Documents")
 
-if uploaded_files:
-    for uploaded_file in uploaded_files:
-        # Create a temporary file
-        with tempfile.NamedTemporaryFile(delete=False, dir=TMP_DIR.as_posix(), suffix='.pdf') as tmp_file:
-            tmp_file.write(uploaded_file.getvalue())
-    
+if uploaded_file:
+    file_path = os.path.join(folder_path, uploaded_file.name)
+    with open(file_path, "wb") as f:
+        f.write(uploaded_file.getbuffer())
+    st.success(f'File "{uploaded_file.name}" saved at "{file_path}"!')
     # Process documents
     if st.button("Process Documents"):
         with st.spinner("Processing documents..."):
             documents = load_documents()
             texts = split_documents(documents)
-            
             # Here you would typically add the texts to your vector store
             db.add_documents(texts)
-            
             st.success(f"Processed {len(texts)} text chunks")
-        
-        # Clean up temporary files
-        for file in TMP_DIR.iterdir():
-            file.unlink()
 
 
 
