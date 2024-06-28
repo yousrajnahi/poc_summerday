@@ -108,6 +108,7 @@ loader_cls_map = {
 loader_kwargs_map = {
                     
               'pdf' : None,
+              'txt' : None,
               'csv': {"csv_args": { "delimiter": ",","quotechar": '"'}},
               'json' : {'jq_schema':'.[] | "MainTask: \(.MainTask), MainTaskSummary: \(.MainTaskSummary), Tips: \(.Tips)  "' },
               'default': { 'strategy' :"fast"}
