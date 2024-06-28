@@ -20,20 +20,27 @@ import warnings
 from langchain_community.document_loaders import DirectoryLoader
 from langchain.schema import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter,Language
-
+from io import StringIO
 
                                                  
 uploaded_file = st.sidebar.file_uploader("Upload a document:",accept_multiple_files=True)  
 
 
 
-# Function to process uploaded file
-def process_uploaded_file(uploaded_file):
-  loader = DirectoryLoader(uploaded_file)
-  documents = loader.load()
-  text_splitter = RecursiveCharacterTextSplitter(chunk_size=300,chunk_overlap=100,length_function=len,add_start_index=True)
-  chunks = text_splitter.split_documents(documents)
-  return chunks
+def process_uploaded_file(uploaded_files):
+    chunks = []
+    for uploaded_file in uploaded_files:
+        # Create a StringIO object from the uploaded file's content
+        string_data = StringIO(uploaded_file.getvalue().decode("utf-8"))
+        
+        # Use TextLoader with the StringIO object
+        loader = TextLoader(string_data)
+        documents = loader.load()
+        
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=300, chunk_overlap=100, length_function=len, add_start_index=True)
+        file_chunks = text_splitter.split_documents(documents)
+        chunks.extend(file_chunks)
+    return chunks
 
 
 
@@ -64,13 +71,16 @@ embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 db = PineconeVectorStore(index_name=index_name, embedding=embeddings, namespace=namespace)
 
 
-# Button to process and add uploaded document
-if st.sidebar.button("Process and Add Document"):
-    chunks = process_uploaded_file(uploaded_file)
-    if chunks:
-        with st.spinner("Processing and adding document..."):
-            db.add_documents(chunks)
-        st.success("Document added successfully!")
+# Button to process and add uploaded documents
+if st.sidebar.button("Process and Add Documents"):
+    if uploaded_files:
+        chunks = process_uploaded_file(uploaded_files)
+        if chunks:
+            with st.spinner("Processing and adding documents..."):
+                db.add_documents(chunks)
+            st.success("Documents added successfully!")
+    else:
+        st.warning("Please upload files before processing.")
 
 # Ensure we only initialize once and reinitialize if needed
 if 'initialized' not in st.session_state or st.session_state.selected_chain_type != selected_chain_type or st.session_state.selected_model != selected_model:
