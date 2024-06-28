@@ -23,7 +23,9 @@ import os
 import tempfile
 from pdfminer.high_level import extract_text
 from langchain_community.document_loaders import (UnstructuredFileLoader,
-                                                  PDFMinerLoader,
+                                                  PDFMinerLoader
+                                                  CSVLoader,
+                                                  JSONLoader,
                                                   TextLoader,
                                                   UnstructuredXMLLoader,
                                                   UnstructuredHTMLLoader,
@@ -97,14 +99,18 @@ loader_cls_map = {
     'xml': UnstructuredXMLLoader,
     'html': UnstructuredHTMLLoader,
     'eml': UnstructuredEmailLoader,
+    'csv': CSVLoader,
+    'json': JSONLoader,
     'default': UnstructuredFileLoader
 }
 
 # Define a mapping from file extensions to arguments loader
 loader_kwargs_map = {
                     
-               'pdf' : None,
-                'default': { 'strategy' :"fast"}
+              'pdf' : None,
+              'csv': {"csv_args": { "delimiter": ",","quotechar": '"'}},
+              'json' : {'jq_schema':'.[] | "MainTask: \(.MainTask), MainTaskSummary: \(.MainTaskSummary), Tips: \(.Tips)  "' },
+              'default': { 'strategy' :"fast"}
 }
 
 
