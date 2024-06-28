@@ -15,13 +15,6 @@ import warnings
 import subprocess
 import shutil
 
-# Command to run 'sudo apt-get update'
-update_command = ['sudo', '-S', 'apt-get', 'update']
-# Command to install libgl1-mesa-glx
-install_command = ['sudo', '-S', 'apt-get', 'install', '-y', 'libgl1-mesa-glx']
-
-
-
 
 from langchain_community.document_loaders import PDFMinerLoader, DirectoryLoader
 from langchain.schema import Document
@@ -107,7 +100,8 @@ loader_cls_map = {
 # Define a mapping from file extensions to arguments loader
 loader_kwargs_map = {
                     
-            'default': None
+               'pdf' : None,
+                'default': { 'strategy' :"fast"}
 }
 
 
