@@ -35,3 +35,4 @@ tokenizers
 unstructured
 unstructured[pdf]
 psutil
+tiktoken
