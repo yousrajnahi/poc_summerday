@@ -42,3 +42,6 @@ langchain
 langchain_community
 unstructured[local-inference]
 opencv-python
+pdfminer.six==20231228
+pdfplumber==0.11.0
+unstructured[all-docs]
