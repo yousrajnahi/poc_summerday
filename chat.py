@@ -47,10 +47,10 @@ namespace = "summerday-space"
 embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 db = PineconeVectorStore(index_name=index_name, embedding=embeddings, namespace=namespace)
 
-st.session_state.source_docs = st.sidebar.file_uploader("Upload a document:",accept_multiple_files=True)  
+source_docs = st.sidebar.file_uploader("Upload a document:",accept_multiple_files=True)  
 
 def process_documents():
-    for source_doc in st.session_state.source_docs:
+    for source_doc in source_docs:
         with tempfile.NamedTemporaryFile(delete=False, dir=TMP_DIR, suffix='.pdf') as tmp_file:
             tmp_file.write(source_doc.read())
         
