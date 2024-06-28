@@ -20,6 +20,9 @@ import warnings
 from langchain_community.document_loaders import PDFMinerLoader
 from langchain.schema import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter,Language
+import os
+import tempfile
+from pdfminer.high_level import extract_text
 
 
 
@@ -49,16 +52,17 @@ db = PineconeVectorStore(index_name=index_name, embedding=embeddings, namespace=
 uploaded_file = st.sidebar.file_uploader("Upload Documents")
 
 if uploaded_file:
-    st.write("Uploaded File:", uploaded_file.name, uploaded_file.type, uploaded_file.size)
+    temp_file = "./temp.pdf"
+    with open(temp_file, "wb") as file:
+        file.write(uploaded_file.getvalue())
+        file_name = uploaded_file.name
+    
+    loader = PDFMinerLoader(temp_file)
+    data = loader.load()
+    st.write(data)
+    
 
-    # Process documents
-    if st.button("Process Documents"):
-        with st.spinner("Processing documents..."):
-            documents = load_documents(uploaded_file)
-            texts = split_documents(documents)
-            # Here you would typically add the texts to your vector store
-            db.add_documents(texts)
-            st.success(f"Processed {len(texts)} text chunks")
+
 
 
 
