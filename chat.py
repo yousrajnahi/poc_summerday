@@ -49,21 +49,23 @@ db = PineconeVectorStore(index_name=index_name, embedding=embeddings, namespace=
 
 
 # File uploader in the sidebar
-uploaded_file = st.sidebar.file_uploader("Upload Documents")
-
-if uploaded_file:
-    temp_file = "./temp.pdf"
-    with open(temp_file, "wb") as file:
-        file.write(uploaded_file.getvalue())
-        file_name = uploaded_file.name
-    
-    documents = load_documents(temp_file)
-    #st.write(data)
-    chunks = split_documents(documents)
-    # Here you would typically add the texts to your vector store
-    db.add_documents(chunks)
+uploaded_files = st.sidebar.file_uploader("Upload Documents", accept_multiple_files=True)
 
 
+# Check if any files were uploaded
+if uploaded_files:
+    for uploaded_file in uploaded_files:
+        temp_file = f"./temp_{uploaded_file.name}"
+        # Write the uploaded file to a new file on disk
+        with open(temp_file, "wb") as file:
+            file.write(uploaded_file.getvalue())
+        
+        # Load and process documents
+        documents = load_documents(temp_file)
+        chunks = split_documents(documents)
+        
+        # Here you would typically add the texts to your vector store
+        db.add_documents(chunks)
 
 
 
