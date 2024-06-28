@@ -21,11 +21,10 @@ from langchain_community.document_loaders import PDFMinerLoader
 from langchain.schema import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter,Language
 
-folder_path = 'DATA'
-os.makedirs(folder_path, exist_ok=True)
 
-def load_documents():
-    loader = PDFMinerLoader(folder_path)
+
+def load_documents(uploaded_file):
+    loader = PDFMinerLoader(uploaded_file)
     documents = loader.load()
     return documents
 
@@ -57,7 +56,7 @@ if uploaded_file:
     # Process documents
     if st.button("Process Documents"):
         with st.spinner("Processing documents..."):
-            documents = load_documents()
+            documents = load_documents(uploaded_file)
             texts = split_documents(documents)
             # Here you would typically add the texts to your vector store
             db.add_documents(texts)
