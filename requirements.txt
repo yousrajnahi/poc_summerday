@@ -37,3 +37,6 @@ openai
 chromadb
 tiktoken
 psutil
+PyPDF2
+langchain
+langchain_community
