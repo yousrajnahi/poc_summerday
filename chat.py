@@ -13,6 +13,7 @@ from pinecone import Pinecone, ServerlessSpec
 from langchain.output_parsers.regex import RegexParser
 import warnings
 import subprocess
+import shutil
 
 # Command to run 'sudo apt-get update'
 update_command = ['sudo', '-S', 'apt-get', 'update']
@@ -20,10 +21,6 @@ update_command = ['sudo', '-S', 'apt-get', 'update']
 install_command = ['sudo', '-S', 'apt-get', 'install', '-y', 'libgl1-mesa-glx']
 
 
-
-# Vérifiez d'abord si le dossier existe
-if os.path.exists('/home/appuser/nltk_data/tokenizers/punkt/PY3'):
-        shutil.rmtree('/home/appuser/nltk_data/tokenizers/punkt/PY3')
 
 
 from langchain_community.document_loaders import PDFMinerLoader, DirectoryLoader
