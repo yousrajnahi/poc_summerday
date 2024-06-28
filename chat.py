@@ -26,13 +26,15 @@ from pdfminer.high_level import extract_text
 
 
 
-def load_documents(uploaded_file):
-    loader = PDFMinerLoader(uploaded_file)
-    documents = loader.load()
+# Function to load documents from a directory
+def load_documents_from_directory(directory_path):
+    loader = DirectoryLoader(directory_path)
+    documents = loader.load_all()
     return documents
 
+# Function to split documents into chunks
 def split_documents(documents):
-    text_splitter =  RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
     texts = text_splitter.split_documents(documents)
     return texts
 
@@ -54,14 +56,16 @@ uploaded_files = st.sidebar.file_uploader("Upload Documents", accept_multiple_fi
 
 # Check if any files were uploaded
 if uploaded_files:
-    for uploaded_file in uploaded_files:
-        temp_file = f"./temp_{uploaded_file.name}"
-        # Write the uploaded file to a new file on disk
-        with open(temp_file, "wb") as file:
-            file.write(uploaded_file.getvalue())
+    # Create a temporary directory to store uploaded files
+    with tempfile.TemporaryDirectory() as temp_dir:
+        # Save each uploaded file to the temporary directory
+        for uploaded_file in uploaded_files:
+            file_path = os.path.join(temp_dir, uploaded_file.name)
+            with open(file_path, "wb") as file:
+                file.write(uploaded_file.getvalue())
         
-        # Load and process documents
-        documents = load_documents(temp_file)
+        # Load and process all documents from the temporary directory
+        documents = load_documents_from_directory(temp_dir)
         chunks = split_documents(documents)
         
         # Here you would typically add the texts to your vector store
