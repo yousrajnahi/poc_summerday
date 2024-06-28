@@ -1,15 +1,15 @@
 pysqlite3-binary
-langchain==0.2.2
+langchain==0.0.279
 langchain-community==0.2.3
-pinecone-client==3.2.2
+pinecone_client==2.2.2
 langchain-pinecone==0.1.1
 langchain-groq==0.1.5
 sentence-transformers==3.0.0
 langchain-huggingface==0.0.3
-
-langchain==0.0.279
-pinecone_client==2.2.2
 streamlit==1.26.0
+
+
+
 
 aiohttp
 async-timeout
