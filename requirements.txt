@@ -38,6 +38,4 @@ unstructured
 unstructured[all-docs]
 psutil
 opencv-python-headless
-poppler-utils 
-tesseract-ocr
-pandoc
+
