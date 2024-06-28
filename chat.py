@@ -73,10 +73,6 @@ if uploaded_files:
         for file in TMP_DIR.iterdir():
             file.unlink()
 
-        # Clean up temporary files
-                for file in TMP_DIR.iterdir():
-                    file.unlink()
-
 
 
 
