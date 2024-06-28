@@ -57,12 +57,11 @@ if uploaded_file:
         file.write(uploaded_file.getvalue())
         file_name = uploaded_file.name
     
-    loader = PDFMinerLoader(temp_file)
-    documents = loader.load()
+    documents = load_documents(temp_file)
     #st.write(data)
-    texts = split_documents(documents)
+    chunks = split_documents(documents)
     # Here you would typically add the texts to your vector store
-    db.add_documents(texts)
+    db.add_documents(chunks)
 
 
 
