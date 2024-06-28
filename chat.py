@@ -70,11 +70,17 @@ if uploaded_files:
         
         # Here you can add further processing of the files as needed
         # For example, loading and processing documents
-        documents = load_documents(temp_file)  # Assuming load_documents is a function you've defined
-        chunks = split_documents(documents)     # Assuming split_documents is another function
+        #documents = load_documents(temp_file)  # Assuming load_documents is a function you've defined
+        #chunks = split_documents(documents)     # Assuming split_documents is another function
         
         # Assuming db.add_documents is a method to add texts to your database
-        db.add_documents(chunks)
+        #db.add_documents(chunks)
+    # Create a DirectoryLoader instance with specified parameters.
+    loader = DirectoryLoader(directory)
+    # Load the documents using the configured loader and return them.
+    documents = loader.load()
+    st.write(documents)
+
 
 
 # Configure your environment
