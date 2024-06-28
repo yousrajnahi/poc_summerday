@@ -29,6 +29,7 @@ from langchain_community.document_loaders import (UnstructuredFileLoader,
                                                   UnstructuredXMLLoader,
                                                   UnstructuredHTMLLoader,
                                                   UnstructuredMarkdownLoader,
+                                                  UnstructuredAPIFileLoader,
                                                   UnstructuredEmailLoader)
 
 
@@ -95,14 +96,14 @@ loader_cls_map = {
     'xml': UnstructuredXMLLoader,
     'html': UnstructuredHTMLLoader,
     'eml': UnstructuredEmailLoader,
-    'default': TextLoader
+    'default': UnstructuredAPIFileLoader
 
 }
 
 # Define a mapping from file extensions to arguments loader
 loader_kwargs_map = {
 
-                     'default': None
+                     'default': { "api_key" :"VdJ2VXMxp8iV2a6Qtuga2xJJyekdI1"}
 }
 
 # Directory where you want to save the files
