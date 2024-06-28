@@ -17,7 +17,7 @@ import warnings
 
 
 
-from langchain_community.document_loaders import DirectoryLoader
+from langchain_community.document_loaders import PDFMinerLoader
 from langchain.schema import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter,Language
 
@@ -25,7 +25,7 @@ folder_path = 'DATA'
 os.makedirs(folder_path, exist_ok=True)
 
 def load_documents():
-    loader = DirectoryLoader(folder_path)
+    loader = PDFMinerLoader(folder_path)
     documents = loader.load()
     return documents
 
