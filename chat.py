@@ -103,8 +103,20 @@ loader_cls_map = {
 # Define a mapping from file extensions to arguments loader
 loader_kwargs_map = {
 
-                     'default': { "api_key" :"VdJ2VXMxp8iV2a6Qtuga2xJJyekdI1"}
+                     'default': { "api_key_auth" :"VdJ2VXMxp8iV2a6Qtuga2xJJyekdI1"}
 }
+
+##################
+
+
+
+
+
+
+
+
+
+#############
 
 # Directory where you want to save the files
 directory = "./Internal_data"
