@@ -65,11 +65,8 @@ def process_documents():
         
 
   
-# Button to process and add uploaded documents
-if st.sidebar.button("Process and Add Documents"):
-    process_documents()
-    st.success("Documents added successfully!")
-   
+
+st.sidebar.button("Process and Add Documents", on_click=process_documents)
 
 
 
