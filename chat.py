@@ -29,7 +29,7 @@ from pdfminer.high_level import extract_text
 # Function to load documents from a directory
 def load_documents_from_directory(directory_path):
     loader = DirectoryLoader(directory_path)
-    documents = loader.load_all()
+    documents = loader.load()
     return documents
 
 # Function to split documents into chunks
