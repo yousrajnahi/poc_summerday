@@ -95,7 +95,7 @@ loader_cls_map = {
     'xml': UnstructuredXMLLoader,
     'html': UnstructuredHTMLLoader,
     'eml': UnstructuredEmailLoader,
-    'default': UnstructuredFileLoader
+    'default': TextLoader
 
 }
 
