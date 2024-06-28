@@ -23,7 +23,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter,Language
 
 
                                                  
-uploaded_file = st.sidebar.file_uploader("Upload a document:", type=["txt"])
+uploaded_file = st.sidebar.file_uploader("Upload a document:",accept_multiple_files=True)  
 # Function to process uploaded file
 def process_uploaded_file(uploaded_file):
   file_name = uploaded_file.name
