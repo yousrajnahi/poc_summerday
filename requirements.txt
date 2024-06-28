@@ -6,8 +6,6 @@ langchain-pinecone==0.1.1
 langchain-groq==0.1.5
 sentence-transformers==3.0.0
 langchain-huggingface==0.0.3
-
-
 aiohttp
 async-timeout
 langchain-core
@@ -36,9 +34,4 @@ unstructured
 unstructured[pdf]
 psutil
 tiktoken
-opencv-python
-libgl1-mesa-glx
-libglib2.0-0
-libsm6
-libxext6
-libxrender-dev
+opencv-python-headless
