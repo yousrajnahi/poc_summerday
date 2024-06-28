@@ -36,3 +36,4 @@ unstructured
 unstructured[pdf]
 psutil
 tiktoken
+opencv-python
