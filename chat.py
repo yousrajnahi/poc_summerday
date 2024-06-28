@@ -34,6 +34,9 @@ from langchain_community.document_loaders import (UnstructuredFileLoader,
 import shutil
 import matplotlib.pyplot as plt
 
+import nltk
+nltk.download('punkt')
+
 def organize_files_by_extension(source_directory):
     # Initialize an empty dictionary to hold files organized by their extensions
     organized_dict = {}
