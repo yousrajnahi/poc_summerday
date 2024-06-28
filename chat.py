@@ -106,7 +106,8 @@ loader_cls_map = {
 # Define a mapping from file extensions to arguments loader
 loader_kwargs_map = {
                     
-                    'default': None
+            'pdf' : None,
+            'default': { 'strategy' :"fast"}
 }
 
 
