@@ -23,7 +23,7 @@ import os
 import tempfile
 from pdfminer.high_level import extract_text
 from langchain_community.document_loaders import (UnstructuredFileLoader,
-                                                  PDFMinerLoader
+                                                  PDFMinerLoader,
                                                   CSVLoader,
                                                   JSONLoader,
                                                   TextLoader,
