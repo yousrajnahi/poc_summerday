@@ -52,21 +52,29 @@ db = PineconeVectorStore(index_name=index_name, embedding=embeddings, namespace=
 uploaded_files = st.sidebar.file_uploader("Upload Documents", accept_multiple_files=True)
 
 
-# Check if any files were uploaded
+# Directory where you want to save the files
+directory = "./Internal_data"
+
+# Check if the directory exists, and if not, create it
+if not os.path.exists(directory):
+    os.makedirs(directory)
+# Check if files were uploaded
 if uploaded_files:
     for uploaded_file in uploaded_files:
-        temp_file = f"./temp_{uploaded_file.name}"
-        # Write the uploaded file to a new file on disk
+        # Path for the new file in the specified directory
+        temp_file = os.path.join(directory, uploaded_file.name)
+        
+        # Write the uploaded file to the new file on disk
         with open(temp_file, "wb") as file:
             file.write(uploaded_file.getvalue())
         
-        # Load and process documents
-        documents = load_documents(temp_file)
-        chunks = split_documents(documents)
+        # Here you can add further processing of the files as needed
+        # For example, loading and processing documents
+        documents = load_documents(temp_file)  # Assuming load_documents is a function you've defined
+        chunks = split_documents(documents)     # Assuming split_documents is another function
         
-        # Here you would typically add the texts to your vector store
+        # Assuming db.add_documents is a method to add texts to your database
         db.add_documents(chunks)
-
 
 
 # Configure your environment
