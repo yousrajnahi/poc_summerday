@@ -22,27 +22,18 @@ from langchain.schema import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter,Language
 from io import StringIO
 
-                                                 
+
+# Setup Pinecone
+pc = Pinecone(api_key=os.environ['PINECONE_API_KEY'])
+index_name = "docs-rag-summerday"
+if index_name not in pc.list_indexes().names():
+    pc.create_index(name=index_name, dimension=384, metric="cosine", spec=ServerlessSpec(cloud="aws", region="us-east-1"))
+
+namespace = "summerday-space"
+embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+db = PineconeVectorStore(index_name=index_name, embedding=embeddings, namespace=namespace)
+
 uploaded_files = st.sidebar.file_uploader("Upload a document:",accept_multiple_files=True)  
-
-
-
-def process_uploaded_file(uploaded_files):
-    chunks = []
-    for uploaded_file in uploaded_files:
-        # Create a StringIO object from the uploaded file's content
-        string_data = StringIO(uploaded_file.getvalue().decode("utf-8"))
-        
-        # Use TextLoader with the StringIO object
-        loader = TextLoader(string_data)
-        documents = loader.load()
-        
-        text_splitter = RecursiveCharacterTextSplitter(chunk_size=300, chunk_overlap=100, length_function=len, add_start_index=True)
-        file_chunks = text_splitter.split_documents(documents)
-        chunks.extend(file_chunks)
-    return chunks
-
-
 
 # Configure your environment
 os.environ['PINECONE_API_KEY'] = st.secrets['PINECONE_API_KEY'] 
@@ -60,27 +51,9 @@ model_options = ["gemma-7b-it","mixtral-8x7b-32768","llama3-70b-8192","llama3-8b
 default_model = "llama3-70b-8192"  # Default model
 selected_model = st.sidebar.selectbox("Choose a model:", options=model_options, index=model_options.index(default_model))
 
-# Setup Pinecone
-pc = Pinecone(api_key=os.environ['PINECONE_API_KEY'])
-index_name = "docs-rag-summerday"
-if index_name not in pc.list_indexes().names():
-    pc.create_index(name=index_name, dimension=384, metric="cosine", spec=ServerlessSpec(cloud="aws", region="us-east-1"))
-
-namespace = "summerday-space"
-embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
-db = PineconeVectorStore(index_name=index_name, embedding=embeddings, namespace=namespace)
 
 
-# Button to process and add uploaded documents
-if st.sidebar.button("Process and Add Documents"):
-    if uploaded_files:
-        chunks = process_uploaded_file(uploaded_files)
-        if chunks:
-            with st.spinner("Processing and adding documents..."):
-                db.add_documents(chunks)
-            st.success("Documents added successfully!")
-    else:
-        st.warning("Please upload files before processing.")
+
 
 # Ensure we only initialize once and reinitialize if needed
 if 'initialized' not in st.session_state or st.session_state.selected_chain_type != selected_chain_type or st.session_state.selected_model != selected_model:
