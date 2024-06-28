@@ -6,6 +6,7 @@ langchain-pinecone==0.1.1
 langchain-groq==0.1.5
 sentence-transformers==3.0.0
 langchain-huggingface==0.0.3
+
 aiohttp
 async-timeout
 langchain-core
@@ -32,13 +33,6 @@ transformers
 tokenizers
 unstructured
 unstructured[pdf]
-psutil
+openai
+chromadb
 tiktoken
-opencv-python-headless
-libgl1-mesa-glx
-libglib2.0-0
-libsm6
-libxext6
-libxrender1
-pdf2image
-pdfminer.six
