@@ -21,6 +21,10 @@ install_command = ['sudo', '-S', 'apt-get', 'install', '-y', 'libgl1-mesa-glx']
 
 
 
+# Vérifiez d'abord si le dossier existe
+if os.path.exists('/home/appuser/nltk_data/tokenizers/punkt/PY3'):
+        shutil.rmtree('/home/appuser/nltk_data/tokenizers/punkt/PY3')
+
 
 from langchain_community.document_loaders import PDFMinerLoader, DirectoryLoader
 from langchain.schema import Document
