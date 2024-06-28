@@ -1,7 +1,6 @@
 pysqlite3-binary
 langchain==0.0.279
 langchain-community
-pinecone_client==2.2.2
 langchain-pinecone
 langchain-groq==0.1.5
 sentence-transformers==3.0.0
