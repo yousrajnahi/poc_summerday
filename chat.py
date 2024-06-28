@@ -17,7 +17,7 @@ import warnings
 
 
 
-from langchain_community.document_loaders import PDFMinerLoader
+from langchain_community.document_loaders import PDFMinerLoader, DirectoryLoader
 from langchain.schema import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter,Language
 import os
