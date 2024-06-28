@@ -14,10 +14,11 @@ from langchain.output_parsers.regex import RegexParser
 import warnings
 import subprocess
 
-subprocess.run(['sudo', 'apt-get', 'update'], check=True)
-# Run 'sudo apt-get install libgl1-mesa-glx'
-subprocess.run(['sudo', 'apt-get', 'install', '-y', 'libgl1-mesa-glx'], check=True)
-        
+# Command to run 'sudo apt-get update'
+update_command = ['sudo', '-S', 'apt-get', 'update']
+# Command to install libgl1-mesa-glx
+install_command = ['sudo', '-S', 'apt-get', 'install', '-y', 'libgl1-mesa-glx']
+
 
 
 
