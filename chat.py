@@ -138,7 +138,9 @@ if uploaded_files:
         loader_args = loader_kwargs_map.get(ext, loader_kwargs_map['default'])
         documents = load_documents(directory, glob_pattern, loader_class, loader_args)
    
-
+# Once processing is complete, remove the temporary directory and its contents
+if os.path.exists(directory):
+    shutil.rmtree(directory)
 
 
 # Configure your environment
