@@ -17,17 +17,19 @@ import warnings
 
 
 
-from langchain_community.document_loaders import TextLoader
+from langchain_community.document_loaders import DirectoryLoader
 from langchain.schema import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter,Language
 
 
                                                  
 uploaded_file = st.sidebar.file_uploader("Upload a document:",accept_multiple_files=True)  
+
+
+
 # Function to process uploaded file
 def process_uploaded_file(uploaded_file):
-  upload_url= '/_stcore/upload_file/' + str(uploaded_file[0]._file_urls)
-  loader = TextLoader(upload_url)
+  loader = DirectoryLoader(uploaded_file)
   documents = loader.load()
   text_splitter = RecursiveCharacterTextSplitter(chunk_size=300,chunk_overlap=100,length_function=len,add_start_index=True)
   chunks = text_splitter.split_documents(documents)
