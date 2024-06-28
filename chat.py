@@ -148,6 +148,7 @@ if uploaded_files:
         print("Loader: ",loader_class)
         loader_args = loader_kwargs_map.get(ext, loader_kwargs_map['default'])
         documents = load_documents(directory, glob_pattern, loader_class, loader_args)
+        st.markdown(documents)
    
 # Once processing is complete, remove the temporary directory and its contents
 if os.path.exists(directory):
