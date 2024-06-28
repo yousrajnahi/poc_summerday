@@ -101,7 +101,7 @@ loader_cls_map = {
     'eml': UnstructuredEmailLoader,
     'csv': CSVLoader,
     'json': JSONLoader,
-    'default': UnstructuredFileLoader
+    'default': TextLoader #UnstructuredFileLoader
 }
 
 # Define a mapping from file extensions to arguments loader
@@ -111,7 +111,7 @@ loader_kwargs_map = {
               'txt' : None,
               'csv': {"csv_args": { "delimiter": ",","quotechar": '"'}},
               'json' : {'jq_schema':'.[] | "MainTask: \(.MainTask), MainTaskSummary: \(.MainTaskSummary), Tips: \(.Tips)  "' },
-              'default': { 'strategy' :"fast"}
+              'default': None #{ 'strategy' :"fast"}
 }
 
 
