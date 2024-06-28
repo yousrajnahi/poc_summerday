@@ -20,7 +20,19 @@ import warnings
 from langchain_community.document_loaders import DirectoryLoader
 from langchain.schema import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter,Language
-from io import StringIO
+import os, tempfile
+from pathlib import Path
+
+TMP_DIR = Path(__file__).resolve().parent.joinpath('data', 'tmp')
+def load_documents():
+    loader = DirectoryLoader(TMP_DIR.as_posix(), glob='**/*.pdf')
+    documents = loader.load()
+    return documents
+
+def split_documents(documents):
+    text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
+    texts = text_splitter.split_documents(documents)
+    return texts
 
 
 # Setup Pinecone
@@ -33,7 +45,33 @@ namespace = "summerday-space"
 embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 db = PineconeVectorStore(index_name=index_name, embedding=embeddings, namespace=namespace)
 
-uploaded_files = st.sidebar.file_uploader("Upload a document:",accept_multiple_files=True)  
+st.session_state.source_docs = st.sidebar.file_uploader("Upload a document:",accept_multiple_files=True)  
+
+def process_documents():
+    for source_doc in st.session_state.source_docs:
+        #
+        with tempfile.NamedTemporaryFile(delete=False, dir=TMP_DIR.as_posix(), suffix='.pdf') as tmp_file:
+            tmp_file.write(source_doc.read())
+        #
+        documents = load_documents()
+        #
+        for _file in TMP_DIR.iterdir():
+            temp_file = TMP_DIR.joinpath(_file)
+            temp_file.unlink()
+        #
+        texts = split_documents(documents)
+        db.add_documents(texts)
+        
+
+  
+# Button to process and add uploaded documents
+if st.sidebar.button("Process and Add Documents"):
+    process_documents()
+    st.success("Documents added successfully!")
+   
+
+
+
 
 # Configure your environment
 os.environ['PINECONE_API_KEY'] = st.secrets['PINECONE_API_KEY'] 
