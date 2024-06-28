@@ -34,3 +34,4 @@ transformers
 tokenizers
 unstructured
 unstructured[pdf]
+psutil
