@@ -40,5 +40,4 @@ psutil
 opencv-python-headless
 poppler-utils 
 tesseract-ocr
-libreoffice
 pandoc
