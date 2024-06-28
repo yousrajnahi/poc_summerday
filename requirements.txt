@@ -40,3 +40,5 @@ psutil
 PyPDF2
 langchain
 langchain_community
+unstructured[local-inference]
+opencv-python
