@@ -49,9 +49,6 @@ db = PineconeVectorStore(index_name=index_name, embedding=embeddings, namespace=
 uploaded_file = st.sidebar.file_uploader("Upload Documents")
 
 if uploaded_file:
-    file_path = os.path.join(folder_path, uploaded_file.name)
-    with open(file_path, "wb") as f:
-        f.write(uploaded_file.getbuffer())
     st.success(f'File "{uploaded_file.name}" saved at "{file_path}"!')
     # Process documents
     if st.button("Process Documents"):
