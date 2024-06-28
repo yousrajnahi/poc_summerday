@@ -23,6 +23,9 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter,Language
 import tempfile
 from pathlib import Path
 
+import os
+os.environ['OPENCV_IO_ENABLE_JASPER'] = 'true' 
+
 # Define temporary directory for uploaded files
 TMP_DIR = Path(__file__).resolve().parent.joinpath('data', 'tmp')
 TMP_DIR.mkdir(parents=True, exist_ok=True)
