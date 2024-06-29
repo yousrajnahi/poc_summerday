@@ -37,7 +37,10 @@ import shutil
 import matplotlib.pyplot as plt
 
 import nltk
-nltk.download('punkt')
+try:
+    nltk.data.find('tokenizers/punkt')
+except LookupError:
+    nltk.download('punkt')
 
 def organize_files_by_extension(source_directory):
     # Initialize an empty dictionary to hold files organized by their extensions
