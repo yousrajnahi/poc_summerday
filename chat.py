@@ -107,7 +107,7 @@ def get_data():
     vectors = [vector_info['values'] for vector_info in response['vectors'].values()]
     chunks = [vector_info['metadata'] for vector_info in response['vectors'].values()]
     embeddings = np.array(vectors)
-    return embeddings, chunks, vectors
+    return embeddings, chunks, vectors, vector_ids
 
 
 
@@ -120,7 +120,7 @@ def create_2d_embeddings(embeddings):
 
 
 if st.sidebar.button("View Data"):
-    embeddings, chunks, vectors = get_data()
+    embeddings, chunks, vectors, vector_ids = get_data()
     documents_projected  = create_2d_embeddings(embeddings)
     # Create and display Plotly figure
     df = pd.DataFrame.from_dict(
