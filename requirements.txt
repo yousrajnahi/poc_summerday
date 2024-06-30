@@ -39,4 +39,4 @@ unstructured[all-docs]
 psutil
 opencv-python-headless
 jq
-
+pacmap
