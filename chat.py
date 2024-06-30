@@ -159,7 +159,7 @@ if st.sidebar.button("View Data"):
         hover_data="extract",
         size="size_col",
         symbol="symbol",
-        size_max=1,
+        size_max=3,
         color_discrete_map=color_discrete_map,
         width=1000,
         height=700
