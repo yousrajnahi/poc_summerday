@@ -44,7 +44,7 @@ try:
     nltk.data.find('tokenizers/punkt')
 except LookupError:
     nltk.download('punkt')
-
+st.title("RAG - AI 4 CI")
 def organize_files_by_extension(source_directory):
     # Initialize an empty dictionary to hold files organized by their extensions
     organized_dict = {}
@@ -118,7 +118,7 @@ def create_2d_embeddings(embeddings):
 
 
 
-if st.button("View Data"):
+if st.sidebar.button("View Data"):
     embeddings, chunks = get_data()
     embeddings_2d = create_2d_embeddings(embeddings)
     # Create and display Plotly figure
@@ -205,7 +205,7 @@ if os.path.exists(directory):
 os.environ['PINECONE_API_KEY'] = st.secrets['PINECONE_API_KEY'] 
 os.environ['GROQ_API_KEY'] = st.secrets['GROQ_API_KEY'] 
 warnings.filterwarnings("ignore")
-st.title("RAG - AI 4 CI")
+
 
 
 chain_types = ['stuff',"refine", "map_reduce", "map_rerank"]
