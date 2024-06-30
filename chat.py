@@ -106,7 +106,7 @@ def get_data():
     vectors = [vector_info['values'] for vector_info in response['vectors'].values()]
     chunks = [vector_info['metadata'] for vector_info in response['vectors'].values()]
     embeddings = np.array(vectors)
-    return embeddings, chunks
+    return embeddings, chunks, vectors
 
 
 
@@ -119,10 +119,53 @@ def create_2d_embeddings(embeddings):
 
 
 if st.sidebar.button("View Data"):
-    embeddings, chunks = get_data()
-    embeddings_2d = create_2d_embeddings(embeddings)
+    embeddings, chunks, vectors = get_data()
+    documents_projected  = create_2d_embeddings(embeddings)
     # Create and display Plotly figure
-    fig = px.scatter(x=embeddings_2d[:, 0], y=embeddings_2d[:, 1], labels={'x': 'Component 1', 'y': 'Component 2'},width=1000,height=700)
+    df = pd.DataFrame.from_dict(
+    [
+        {
+            "x": documents_projected[i, 0],
+            "y": documents_projected[i, 1],
+            "source": chunks[i]["source"].split("/")[-1],
+            "extract": chunks[i]['text'][:100] + "...",
+            "symbol": "circle",
+            "size_col": 4,
+            'vector' : vectors[i],
+            'id' : vector_ids[i]
+        }
+        for i in range(len(chunks))
+    ]
+    
+)
+
+    # Generating a custom color map
+    num_unique_sources = df['source'].nunique()
+    colors = plt.get_cmap('tab20')(np.linspace(0, 1, num_unique_sources))
+    
+    color_discrete_map = {source: f'rgb({int(rgb[0]*255)}, {int(rgb[1]*255)}, {int(rgb[2]*255)})'
+                          for source, rgb in zip(df['source'].unique(), colors)}
+    
+    # Ensure user query has a distinct color
+    color_discrete_map["User query"] = "black"
+    
+    # Plot
+    fig = px.scatter(
+        df,
+        x="x",
+        y="y",
+        color="source",
+        hover_data="extract",
+        size="size_col",
+        symbol="symbol",
+        color_discrete_map=color_discrete_map,
+        width=1000,
+        height=700
+    )
+    fig.update_layout(
+        legend_title_text="<b>Chunk source</b>",
+        title="<b>2D Projection of Chunk Embeddings via PaCMAP</b>"
+    )
     st.plotly_chart(fig)
 
 ############################################ upload files ###################################################
