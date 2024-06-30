@@ -131,7 +131,7 @@ if st.sidebar.button("View Data"):
             "source": chunks[i]["source"].split("/")[-1],
             "extract": chunks[i]['text'][:100] + "...",
             "symbol": "circle",
-            "size_col": 4,
+            "size_col": 2,
             'vector' : vectors[i],
             'id' : vector_ids[i]
         }
