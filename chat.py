@@ -14,6 +14,8 @@ from langchain.output_parsers.regex import RegexParser
 import warnings
 import subprocess
 import shutil
+import pacmap
+import plotly.express as px
 
 
 from langchain_community.document_loaders import PDFMinerLoader, DirectoryLoader
@@ -88,8 +90,41 @@ if index_name not in pc.list_indexes().names():
 namespace = "summerday-space"
 embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 db = PineconeVectorStore(index_name=index_name, embedding=embeddings, namespace=namespace)
+################################################## display data ###################################
+
+index = pc.Index(name=index_name)
+
+# Function to fetch and process data
+def get_data():
+    id = []
+    for ids in index.list(namespace="summerday-space"):
+        id.append(ids)
+    all_ids = sum(id, [])
+    vector_ids = [id for id in all_ids]
+    response = index.fetch(ids=vector_ids, namespace="summerday-space")
+    vectors = [vector_info['values'] for vector_info in response['vectors'].values()]
+    chunks = [vector_info['metadata'] for vector_info in response['vectors'].values()]
+    embeddings = np.array(vectors)
+    return embeddings, chunks
 
 
+
+# Function to create 2D embeddings
+def create_2d_embeddings(embeddings):
+    embedding_projector = pacmap.PaCMAP(n_components=2, n_neighbors=None, MN_ratio=0.5, FP_ratio=2.0, random_state=42)
+    embeddings_2d = embedding_projector.fit_transform(embeddings, init="pca")
+    return embeddings_2d
+
+
+
+if st.button("View Data"):
+    embeddings, chunks = get_data()
+    embeddings_2d = create_2d_embeddings(embeddings)
+    # Create and display Plotly figure
+    fig = px.scatter(x=embeddings_2d[:, 0], y=embeddings_2d[:, 1], labels={'x': 'Component 1', 'y': 'Component 2'},width=1000,height=700)
+    st.plotly_chart(fig)
+
+############################################ upload files ###################################################
 # File uploader in the sidebar
 uploaded_files = st.sidebar.file_uploader("Upload Documents", accept_multiple_files=True)
 
