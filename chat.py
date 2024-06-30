@@ -168,7 +168,7 @@ if st.sidebar.button("View Data"):
     fig.update_traces(
         marker=dict(
             opacity=0.7,
-            line=dict(width=0.5, color="DarkSlateGrey"),
+            line=dict(width=0.5),
             sizemode='diameter'
         ),
         selector=dict(mode="markers")
@@ -250,7 +250,11 @@ if uploaded_files:
         print("Loader: ",loader_class)
         loader_args = loader_kwargs_map.get(ext, loader_kwargs_map['default'])
         documents = load_documents(directory, glob_pattern, loader_class, loader_args)
-        st.markdown(documents)
+        chunks = split_documents(documents)    
+        # Assuming db.add_documents is a method to add texts to your database
+        db.add_documents(chunks)
+        st.success(uploaded_file.name+' added successfully')
+        #st.markdown(documents)
    
 # Once processing is complete, remove the temporary directory and its contents
 if os.path.exists(directory):
