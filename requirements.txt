@@ -40,3 +40,4 @@ psutil
 opencv-python-headless
 jq
 pacmap
+plotly
