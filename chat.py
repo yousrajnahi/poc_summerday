@@ -17,6 +17,7 @@ import shutil
 import pacmap
 import plotly.express as px
 import numpy as np
+import pandas as pd
 
 
 from langchain_community.document_loaders import PDFMinerLoader, DirectoryLoader
