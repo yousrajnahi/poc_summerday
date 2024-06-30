@@ -121,24 +121,24 @@ def create_2d_embeddings(embeddings):
 
 if st.sidebar.button("View Data"):
     embeddings, chunks, vectors, vector_ids = get_data()
-    documents_projected  = create_2d_embeddings(embeddings)
-    # Create and display Plotly figure
-    df = pd.DataFrame.from_dict(
-    [
-        {
-            "x": documents_projected[i, 0],
-            "y": documents_projected[i, 1],
-            "source": chunks[i]["source"].split("/")[-1],
-            "extract": chunks[i]['text'][:100] + "...",
-            "symbol": "circle",
-            "size_col": 4,
-            'vector' : vectors[i],
-            'id' : vector_ids[i]
-        }
-        for i in range(len(chunks))
-    ]
+    documents_projected = create_2d_embeddings(embeddings)
     
-)
+    # Create DataFrame
+    df = pd.DataFrame.from_dict(
+        [
+            {
+                "x": documents_projected[i, 0],
+                "y": documents_projected[i, 1],
+                "source": chunks[i]["source"].split("/")[-1],
+                "extract": chunks[i]['text'][:100] + "...",
+                "symbol": "circle",
+                "size_col": 2,  # Reduced size
+                'vector': vectors[i],
+                'id': vector_ids[i]
+            }
+            for i in range(len(chunks))
+        ]
+    )
 
     # Generating a custom color map
     num_unique_sources = df['source'].nunique()
@@ -158,19 +158,27 @@ if st.sidebar.button("View Data"):
         color="source",
         hover_data="extract",
         size="size_col",
+        size_max=5,  # Set maximum size
         symbol="symbol",
         color_discrete_map=color_discrete_map,
         width=1000,
         height=700
     )
+    
     fig.update_traces(
-        marker=dict(opacity=1, line=dict(width=0, color="DarkSlateGrey")),
+        marker=dict(
+            opacity=0.7,
+            line=dict(width=0.5, color="DarkSlateGrey"),
+            sizemode='diameter'
+        ),
         selector=dict(mode="markers")
     )
+    
     fig.update_layout(
         legend_title_text="<b>Chunk source</b>",
         title="<b>2D Projection of Chunk Embeddings via PaCMAP</b>"
     )
+    
     st.plotly_chart(fig)
 
 ############################################ upload files ###################################################
