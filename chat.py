@@ -163,6 +163,10 @@ if st.sidebar.button("View Data"):
         width=1000,
         height=700
     )
+    fig.update_traces(
+        marker=dict(opacity=1, line=dict(width=0, color="DarkSlateGrey")),
+        selector=dict(mode="markers")
+    )
     fig.update_layout(
         legend_title_text="<b>Chunk source</b>",
         title="<b>2D Projection of Chunk Embeddings via PaCMAP</b>"
