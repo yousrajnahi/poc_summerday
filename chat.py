@@ -16,6 +16,7 @@ import subprocess
 import shutil
 import pacmap
 import plotly.express as px
+import numpy as np
 
 
 from langchain_community.document_loaders import PDFMinerLoader, DirectoryLoader
