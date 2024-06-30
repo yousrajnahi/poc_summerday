@@ -253,7 +253,7 @@ if uploaded_files:
         chunks = split_documents(documents)    
         # Assuming db.add_documents is a method to add texts to your database
         db.add_documents(chunks)
-        st.success(uploaded_file.name+' added successfully')
+        st.success(uploaded_file.name+' added successfully', icon="✅")
         #st.markdown(documents)
    
 # Once processing is complete, remove the temporary directory and its contents
