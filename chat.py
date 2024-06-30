@@ -160,8 +160,8 @@ if st.sidebar.button("View Data"):
         size="size_col",
         symbol="symbol",
         color_discrete_map=color_discrete_map,
-        width=1000,
-        height=1000
+        width=100,
+        height=10
     )
     
     fig.update_traces(
