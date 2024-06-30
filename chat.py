@@ -132,7 +132,7 @@ if st.sidebar.button("View Data"):
                 "source": chunks[i]["source"].split("/")[-1],
                 "extract": chunks[i]['text'][:100] + "...",
                 "symbol": "circle",
-                "size_col": 0.5,  # Reduced size
+                "size_col": 2,  # Reduced size
                 'vector': vectors[i],
                 'id': vector_ids[i]
             }
@@ -168,7 +168,7 @@ if st.sidebar.button("View Data"):
     fig.update_traces(
         marker=dict(
             opacity=0.7,
-            line=dict(width=0.5, color="DarkSlateGrey"),
+            line=dict(width=0.1, color="DarkSlateGrey"),
             sizemode='diameter'
         ),
         selector=dict(mode="markers")
