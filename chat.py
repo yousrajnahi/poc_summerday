@@ -139,6 +139,7 @@ if st.sidebar.button("View Data"):
             for i in range(len(chunks))
         ]
     )
+    st.write(df)
 
     # Generating a custom color map
     num_unique_sources = df['source'].nunique()
