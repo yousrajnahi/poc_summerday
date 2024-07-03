@@ -57,3 +57,11 @@ def split_documents(documents):
     texts = text_splitter.split_documents(documents)
     return texts
 
+def save_uploaded_files(uploaded_files, directory):
+    for uploaded_file in uploaded_files:
+        # Path for the new file in the specified directory
+        temp_file = os.path.join(directory, uploaded_file.name)
+        # Write the uploaded file to the new file on disk
+        with open(temp_file, "wb") as file:
+            file.write(uploaded_file.getvalue())
+
