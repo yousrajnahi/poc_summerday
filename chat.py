@@ -51,7 +51,7 @@ if st.sidebar.button("View Data"):
 
 ############################################################################################################
 
-############################################ upload files ###################################################
+############################################ Upload files ###################################################
 # File uploader in the sidebar
 uploaded_files = st.sidebar.file_uploader("Upload Documents", accept_multiple_files=True)
 # Define a mapping from file extensions to loader classes
@@ -98,27 +98,18 @@ if uploaded_files:
 # Once processing is complete, remove the temporary directory and its contents
 remove_directory(directory)
   
-################################################################################################################################
+################################################ Chat #############################################################
 
 # Configure your environment
 os.environ['PINECONE_API_KEY'] = st.secrets['PINECONE_API_KEY'] 
 os.environ['GROQ_API_KEY'] = st.secrets['GROQ_API_KEY'] 
-
-
-
-
 chain_types = ['stuff',"refine", "map_reduce", "map_rerank"]
 selected_chain_type = st.sidebar.selectbox("Choose a chain type:", options=chain_types)
-
 
 # Sidebar for model and chain type selection
 model_options = ["gemma-7b-it","mixtral-8x7b-32768","llama3-70b-8192","llama3-8b-8192"]
 default_model = "llama3-70b-8192"  # Default model
 selected_model = st.sidebar.selectbox("Choose a model:", options=model_options, index=model_options.index(default_model))
-
-
-
-
 
 # Ensure we only initialize once and reinitialize if needed
 if 'initialized' not in st.session_state or st.session_state.selected_chain_type != selected_chain_type or st.session_state.selected_model != selected_model:
@@ -126,59 +117,13 @@ if 'initialized' not in st.session_state or st.session_state.selected_chain_type
     st.session_state.selected_chain_type = selected_chain_type
     st.session_state.selected_model = selected_model
 
-    ####
-
     map_reduce_question_template = read_template_from_file('prompt_templates/map_reduce_question_template.txt')
     map_reduce_combine_template = read_template_from_file('prompt_templates/map_reduce_combine_template.txt')
     map_rerank_template = read_template_from_file('prompt_templates/map_rerank_template.txt')
+    stuff_template = read_template_from_file('prompt_templates/stuff_template.txt')
+    refine_template = read_template_from_file('prompt_templates/refine_template.txt')
+    refine_question_template = read_template_from_file('prompt_templates/refine_question_template.txt')
 
-    stuff_template = """
-      Use the following pieces of history and context to answer the question at the end. 
-      If you don't know the answer based on the provided information, just say that you don't know, don't try to make up an answer.
-      History:
-      --------
-      {history}
-      --------
-
-      Context:
-      --------
-      {context}
-      --------
-
-      Question: {question}
-      Helpful Answer:
-      """
-    refine_template ="""
-        The original question is as follows: {question}
-        We have provided an existing answer: {existing_answer}
-        Here is the relevant history:
-        ------------
-        {history}
-        ------------
-        We have the opportunity to refine the existing answer (only if needed) with 
-        some more context below.
-        ------------
-        {context_str}
-        ------------
-        Given the new context and history, refine the original answer to better answer the question. 
-        If the context isn't useful, return the original answer.
-        """
-    refine_question_template = """
-        Here is the relevant history:
-        ------------
-        {history}
-        ------------
-        Context information is below.
-        ------------
-        {context_str}
-        ------------
-        Given the context information, history, and no prior knowledge, answer the question: 
-        {question}
-            """
-
-    #####
-
-    ####
     chain_type_kwargs = {
       "map_reduce": {
           "question_prompt": PromptTemplate(input_variables=["context", "question", "history"], template=map_reduce_question_template),
@@ -197,9 +142,7 @@ if 'initialized' not in st.session_state or st.session_state.selected_chain_type
       "stuff": {
           "prompt": PromptTemplate(input_variables=["history", "context", "question"], template = stuff_template),
           "memory": ConversationBufferMemory(memory_key="history", input_key="question")
-      }}
-    ####
-    
+      }}   
     
     # Setup Groq
     llm = ChatGroq(temperature=0, model_name=selected_model)
