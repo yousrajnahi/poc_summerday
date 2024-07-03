@@ -5,10 +5,8 @@ import pandas as pd
 import os
 import shutil
 import matplotlib.pyplot as plt
-from src.vector_store import get_vector_store, get_data_in_vector_store
-from src.embeddings import get_embeddings
-from pinecone import Pinecone, ServerlessSpec
-import streamlit as st
+
+
 
 # Function to create 2D embeddings
 def create_2d_embeddings(embeddings):
@@ -46,19 +44,3 @@ def df_visualisation(df):
   fig.update_traces(marker=dict(opacity=0.7,line=dict(width=0.5), sizemode='diameter'), selector=dict(mode="markers"))
   fig.update_layout(legend_title_text="<b>Chunk source</b>", title="<b>2D Projection of Chunk Embeddings via PaCMAP</b>")
   return fig
-
-index_name = "docs-rag-summerday"
-namespace = "summerday-space"
-embedding_model_name = "all-MiniLM-L6-v2"
-embeddings = get_embeddings(embedding_model_name)
-dimension = 384 
-metric = "cosine"
-spec = ServerlessSpec(cloud="aws", region="us-east-1")
-db, index = get_vector_store(index_name, namespace, embeddings, dimension, metric, spec)
-embeddings, chunks, vectors, vector_ids =  get_data_in_vector_store(index,namespace)
-documents_projected = create_2d_embeddings(embeddings)
-df = vectordb_to_dfdb(documents_projected, chunks, vectors,vector_ids)
-st.write(df)
-fig = df_visualisation(df)
-st.plotly_chart(fig)
-
