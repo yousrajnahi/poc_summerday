@@ -46,7 +46,7 @@ try:
 except LookupError:
     nltk.download('punkt')
 
-from src.vector_store import get_vector_store
+from src.vector_store import get_vector_store, get_data_in_vector_store
 from src.embeddings import get_embeddings
 
 st.title("RAG - AI 4 CI")
@@ -134,7 +134,7 @@ def create_2d_embeddings(embeddings):
 
 
 if st.sidebar.button("View Data"):
-    embeddings, chunks, vectors, vector_ids = get_data()
+    embeddings, chunks, vectors, vector_ids =  get_data_in_vector_store(index,namespace)
     documents_projected = create_2d_embeddings(embeddings)
     
     # Create DataFrame
