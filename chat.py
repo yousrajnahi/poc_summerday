@@ -24,7 +24,7 @@ import shutil
 from src.vector_store import get_vector_store, get_data_in_vector_store
 from src.embeddings import get_embeddings
 from src.displays import create_2d_embeddings, vectordb_to_dfdb, df_visualisation
-from src.document_processing import organize_files_by_extension,  load_documents, split_documents
+from src.document_processing import organize_files_by_extension,  load_documents, split_documents, save_uploaded_files, create_directory, remove_directory
 warnings.filterwarnings("ignore")
 
 st.title("RAG - AI 4 CI")
@@ -75,22 +75,13 @@ loader_kwargs_map = {
               'json' : {'jq_schema':'.[] | "MainTask: \(.MainTask), MainTaskSummary: \(.MainTaskSummary), Tips: \(.Tips)  "' },
               'default': { 'strategy' :"fast"}
 }
-# Directory where you want to save the files
+
+# Temporary directory where you want to save the files
 directory = "./Internal_data"
-
-# Check if the directory exists, and if not, create it
-if not os.path.exists(directory):
-    os.makedirs(directory)
-
+create_directory(directory)
 # Check if files were uploaded
 if uploaded_files:
-    for uploaded_file in uploaded_files:
-        # Path for the new file in the specified directory
-        temp_file = os.path.join(directory, uploaded_file.name)
-        # Write the uploaded file to the new file on disk
-        with open(temp_file, "wb") as file:
-            file.write(uploaded_file.getvalue())
-        
+    save_uploaded_files(uploaded_files, directory)
     extensions_dict = organize_files_by_extension(directory)
     for ext, files in extensions_dict.items():
         # Create the glob pattern for the files of this extension
@@ -104,11 +95,9 @@ if uploaded_files:
         # Assuming db.add_documents is a method to add texts to your database
         db.add_documents(chunks)
         st.success(uploaded_file.name+' added successfully', icon="✅")
-        #st.markdown(documents)
    
 # Once processing is complete, remove the temporary directory and its contents
-if os.path.exists(directory):
-    shutil.rmtree(directory)
+remove_directory(directory)
   
 ################################################################################################################################
 
