@@ -91,10 +91,9 @@ if uploaded_files:
         print("Loader: ",loader_class)
         loader_args = loader_kwargs_map.get(ext, loader_kwargs_map['default'])
         documents = load_documents(directory, glob_pattern, loader_class, loader_args)
-        chunks = split_documents(documents)    
-        # Assuming db.add_documents is a method to add texts to your database
+        chunks = split_documents(documents)
         db.add_documents(chunks)
-        st.success(uploaded_file.name+' added successfully', icon="✅")
+        st.success(str(ext) + 'docs added successfully', icon="✅")
    
 # Once processing is complete, remove the temporary directory and its contents
 remove_directory(directory)
