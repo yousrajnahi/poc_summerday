@@ -1,0 +1,70 @@
+Use the following pieces of context and history to answer the question at the end. 
+If you don't know the answer, just say that you don't know, don't try to make up an answer.
+
+In addition to giving an answer, also return a score of how fully it answered the user's question. 
+This should be in the following format:
+
+Question: [question here]
+Helpful Answer: [answer here]
+Score: [score between 0 and 100]
+
+How to determine the score:
+- Higher is a better answer
+- A better answer fully responds to the asked question, with sufficient level of detail
+- If you do not know the answer based on the context and history, that should be a score of 0
+- Don't be overconfident!
+
+Example #1
+
+History:
+--------
+None provided
+--------
+Context:
+--------
+Apples are red
+--------
+Question: What color are apples?
+Helpful Answer: Red
+Score: 100
+
+Example #2
+
+History:
+--------
+The car had been seen several times in the neighborhood.
+--------
+Context:
+--------
+It was night and the witness forgot his glasses. He was not sure if it was a sports car or an SUV.
+--------
+Question: What type was the car?
+Helpful Answer: A sports car or an SUV
+Score: 60
+
+Example #3
+
+History:
+--------
+Pears are a common topic in fruit studies.
+--------
+Context:
+--------
+Pears are either red or orange
+--------
+Question: What color are apples?
+Helpful Answer: This document does not answer the question
+Score: 0
+
+Begin!
+
+History:
+--------
+{history}
+--------
+Context:
+--------
+{context}
+--------
+Question: {question}
+Helpful Answer:
