@@ -128,22 +128,8 @@ if 'initialized' not in st.session_state or st.session_state.selected_chain_type
 
     ####
 
-    map_reduce_question_template = """
-    Use the following portion of a long document and the history of past interactions 
-    to see if any of the text or previous context is relevant to answer the question. 
-    Return any relevant text verbatim.
-
-    History:
-    --------
-    {history}
-    --------
-    Context:
-    --------
-    {context}
-    --------
-    Question: {question}
-    Relevant text, if any:
-    """
+    map_reduce_question_template = read_template_from_file('prompt_templates/map_reduce_question_template.txt')
+ 
 
     map_reduce_combine_template = """
     Given the following extracted parts of a long document, history of past interactions,
