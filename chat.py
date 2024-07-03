@@ -49,6 +49,16 @@ except LookupError:
 from src.vector_store import get_vector_store, get_data_in_vector_store
 from src.embeddings import get_embeddings
 
+pages = {
+    "Your account" : [
+        st.Page("vectordb_visualisation.py", title="Visulaisation"),
+    ]
+    
+}
+
+pg = st.navigation(pages)
+pg.run()
+
 st.title("RAG - AI 4 CI")
 
 index_name = "docs-rag-summerday"
