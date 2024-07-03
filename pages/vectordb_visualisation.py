@@ -55,6 +55,14 @@ def create_2d_embeddings(embeddings):
     embeddings_2d = embedding_projector.fit_transform(embeddings, init="pca")
     return embeddings_2d
 
+index_name = "docs-rag-summerday"
+namespace = "summerday-space"
+embedding_model_name = "all-MiniLM-L6-v2"
+embeddings = get_embeddings(embedding_model_name)
+dimension=384 
+metric="cosine"
+spec=ServerlessSpec(cloud="aws", region="us-east-1")
+db, index = get_vector_store(index_name, namespace, embeddings, dimension, metric, spec)
 embeddings, chunks, vectors, vector_ids =  get_data_in_vector_store(index,namespace)
 documents_projected = create_2d_embeddings(embeddings)
 
