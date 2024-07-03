@@ -48,10 +48,13 @@ except LookupError:
 
 from src.vector_store import get_vector_store, get_data_in_vector_store
 from src.embeddings import get_embeddings
+from pages.vectordb_visualisation import get_data_in_vector_store, create_2d_embeddings,vectordb_to_dfdb,df_visualisation
+
+
 
 pages = {
     "Your account" : [
-       st.Page("pages/vectordb_visualisation.py", title="Visulaisation", icon="🔥"),
+       st.Page(page2, title="Visulaisation", icon="🔥"),
 
     ]
     
@@ -72,6 +75,13 @@ spec=ServerlessSpec(cloud="aws", region="us-east-1")
 db, index = get_vector_store(index_name, namespace, embeddings, dimension, metric, spec)
 
 
+def page2():
+  embeddings, chunks, vectors, vector_ids =  get_data_in_vector_store(index,namespace)
+  documents_projected = create_2d_embeddings(embeddings)
+  df = vectordb_to_dfdb(documents_projected, chunks, vectors,vector_ids)
+  st.write(df)
+  fig = df_visualisation(df)
+  st.plotly_chart(fig)
 
 
 
