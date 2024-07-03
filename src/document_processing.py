@@ -70,4 +70,6 @@ def create_directory(directory_path):
     if not os.path.exists(directory_path):
         os.makedirs(directory_path)
     
-    return directory_path
+def remove_directory(directory_path):
+    if os.path.exists(directory_path):
+        shutil.rmtree(directory_path)
