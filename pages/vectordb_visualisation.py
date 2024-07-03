@@ -50,7 +50,7 @@ namespace = "summerday-space"
 embedding_model_name = "all-MiniLM-L6-v2"
 embeddings = get_embeddings(embedding_model_name)
 dimension = 384 
-metri c= "cosine"
+metric = "cosine"
 spec = ServerlessSpec(cloud="aws", region="us-east-1")
 db, index = get_vector_store(index_name, namespace, embeddings, dimension, metric, spec)
 embeddings, chunks, vectors, vector_ids =  get_data_in_vector_store(index,namespace)
