@@ -1,4 +1,4 @@
-__import__('pysqlite3')
+or__import__('pysqlite3')
 import sys
 sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 import streamlit as st
@@ -66,7 +66,7 @@ spec=ServerlessSpec(cloud="aws", region="us-east-1")
 db, index = get_vector_store(index_name, namespace, embeddings, dimension, metric, spec)
 
 
-############# Display data ###################
+################################################# Display vector data ###################
 
 if st.sidebar.button("View Data"):
   embeddings, chunks, vectors, vector_ids =  get_data_in_vector_store(index,namespace)
@@ -76,55 +76,7 @@ if st.sidebar.button("View Data"):
   fig = df_visualisation(df)
   st.plotly_chart(fig)
 
-###############################################"
-
-
-def organize_files_by_extension(source_directory):
-    # Initialize an empty dictionary to hold files organized by their extensions
-    organized_dict = {}
-    # Walk through all the directories and files in the source directory
-    for root, dirs, files in os.walk(source_directory):
-        for filename in files:
-            # Get the full file path
-            file_path = os.path.join(root, filename)
-            # Split the file name to get the extension
-            _, extension = os.path.splitext(filename)
-            # Check if the file has an extension and is not a hidden file
-            if extension and not filename.startswith('.'):
-                # Normalize the extension by removing the leading dot and converting to lowercase
-                extension_folder = extension[1:].lower()
-                # If the extension is not already a key in the dictionary, add it with an empty list
-                if extension_folder not in organized_dict:
-                    organized_dict[extension_folder] = []
-                # Append the file path to the list corresponding to its extension
-                organized_dict[extension_folder].append(file_path)
-    # Return the dictionary containing files organized by their extensions
-    return organized_dict
-
-
-
-def load_documents(DATA_PATH, glob_pattern,loader_class, loader_args):
-  # Create a DirectoryLoader instance with specified parameters.
-    loader = DirectoryLoader(DATA_PATH, glob=glob_pattern, show_progress=True,use_multithreading=True,loader_cls = loader_class, loader_kwargs =loader_args)
-    # Load the documents using the configured loader and return them.
-    documents = loader.load()
-    return documents
-    
-def split_documents(documents):
-    text_splitter =  RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
-    texts = text_splitter.split_documents(documents)
-    return texts
-
-
-
-
-
-
-
-
-
-
-
+########################################################################################################
 
 
 
@@ -158,21 +110,14 @@ loader_kwargs_map = {
               'default': { 'strategy' :"fast"}
 }
 
-
-##################
-
-
-
-
-
-#############
-
 # Directory where you want to save the files
 directory = "./Internal_data"
 
 # Check if the directory exists, and if not, create it
 if not os.path.exists(directory):
     os.makedirs(directory)
+
+
 # Check if files were uploaded
 if uploaded_files:
     for uploaded_file in uploaded_files:
@@ -208,7 +153,8 @@ if uploaded_files:
 # Once processing is complete, remove the temporary directory and its contents
 if os.path.exists(directory):
     shutil.rmtree(directory)
-
+  
+################################################################################################################################
 
 # Configure your environment
 os.environ['PINECONE_API_KEY'] = st.secrets['PINECONE_API_KEY'] 
