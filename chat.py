@@ -77,6 +77,7 @@ def page2():
 
 pages = {
     "Your account" : [
+      st.Page("chat.py", title="Visulaisation", icon="🔥"),
        st.Page(page2, title="Visulaisation", icon="🔥"),
 
     ]
