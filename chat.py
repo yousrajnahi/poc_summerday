@@ -45,6 +45,9 @@ try:
     nltk.data.find('tokenizers/punkt')
 except LookupError:
     nltk.download('punkt')
+
+from src.vector_store import get_vector_store
+
 st.title("RAG - AI 4 CI")
 def organize_files_by_extension(source_directory):
     # Initialize an empty dictionary to hold files organized by their extensions
@@ -83,18 +86,10 @@ def split_documents(documents):
     return texts
 
 
-# Setup Pinecone
-pc = Pinecone(api_key=os.environ['PINECONE_API_KEY'])
+
 index_name = "docs-rag-summerday"
-if index_name not in pc.list_indexes().names():
-    pc.create_index(name=index_name, dimension=384, metric="cosine", spec=ServerlessSpec(cloud="aws", region="us-east-1"))
-
 namespace = "summerday-space"
-embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
-db = PineconeVectorStore(index_name=index_name, embedding=embeddings, namespace=namespace)
-################################################## display data ###################################
-
-index = pc.Index(name=index_name)
+embeddings, db, index = get_vector_store(index_name, namespace)
 
 # Function to fetch and process data
 def get_data():
