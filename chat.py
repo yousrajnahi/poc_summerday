@@ -93,7 +93,7 @@ if uploaded_files:
         documents = load_documents(directory, glob_pattern, loader_class, loader_args)
         chunks = split_documents(documents)
         db.add_documents(chunks)
-        st.success(str(ext) + 'docs added successfully', icon="✅")
+        st.success(str(ext) + ' docs added successfully', icon="✅")
    
 # Once processing is complete, remove the temporary directory and its contents
 remove_directory(directory)
