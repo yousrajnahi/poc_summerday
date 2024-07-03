@@ -109,22 +109,6 @@ def split_documents(documents):
 
 
 
-
-# Function to fetch and process data
-def get_data():
-    id = []
-    for ids in index.list(namespace="summerday-space"):
-        id.append(ids)
-    all_ids = sum(id, [])
-    vector_ids = [id for id in all_ids]
-    response = index.fetch(ids=vector_ids, namespace="summerday-space")
-    vectors = [vector_info['values'] for vector_info in response['vectors'].values()]
-    chunks = [vector_info['metadata'] for vector_info in response['vectors'].values()]
-    embeddings = np.array(vectors)
-    return embeddings, chunks, vectors, vector_ids
-
-
-
 # Function to create 2D embeddings
 def create_2d_embeddings(embeddings):
     embedding_projector = pacmap.PaCMAP(n_components=2, n_neighbors=None, MN_ratio=0.5, FP_ratio=2.0, random_state=42)
