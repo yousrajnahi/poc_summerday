@@ -1,30 +1,14 @@
-__import__('pysqlite3')
-import sys
-sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
-import streamlit as st
+import nltk
 import os
-from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_pinecone import PineconeVectorStore
-from langchain_groq import ChatGroq
-from langchain.chains import RetrievalQA
-from langchain.prompts.prompt import PromptTemplate
-from langchain.memory import ConversationBufferMemory
-from pinecone import Pinecone, ServerlessSpec
-from langchain.output_parsers.regex import RegexParser
-import warnings
-import subprocess
+import tempfile
 import shutil
-import pacmap
-import plotly.express as px
-import numpy as np
-import pandas as pd
-
-
+try:
+    nltk.data.find('tokenizers/punkt')
+except LookupError:
+    nltk.download('punkt')
 from langchain_community.document_loaders import PDFMinerLoader, DirectoryLoader
 from langchain.schema import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter,Language
-import os
-import tempfile
 from pdfminer.high_level import extract_text
 from langchain_community.document_loaders import (UnstructuredFileLoader,
                                                   PDFMinerLoader,
@@ -37,14 +21,6 @@ from langchain_community.document_loaders import (UnstructuredFileLoader,
                                                   UnstructuredEmailLoader)
 
 
-import shutil
-import matplotlib.pyplot as plt
-
-import nltk
-try:
-    nltk.data.find('tokenizers/punkt')
-except LookupError:
-    nltk.download('punkt')
 def organize_files_by_extension(source_directory):
     # Initialize an empty dictionary to hold files organized by their extensions
     organized_dict = {}
