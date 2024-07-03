@@ -8,6 +8,16 @@ from langchain.chains import RetrievalQA
 from langchain.prompts.prompt import PromptTemplate
 from langchain.memory import ConversationBufferMemory
 from langchain.output_parsers.regex import RegexParser
+from langchain_community.document_loaders import (UnstructuredFileLoader,
+                                                  PDFMinerLoader,
+                                                  CSVLoader,
+                                                  JSONLoader,
+                                                  TextLoader,
+                                                  UnstructuredXMLLoader,
+                                                  UnstructuredHTMLLoader,
+                                                  UnstructuredMarkdownLoader,
+                                                  UnstructuredEmailLoader)
+
 import warnings
 import os
 import shutil
