@@ -52,16 +52,7 @@ from pages.vectordb_visualisation import create_2d_embeddings, vectordb_to_dfdb,
 
 
 
-pages = {
-    "Your account" : [
-       st.Page(page2, title="Visulaisation", icon="🔥"),
 
-    ]
-    
-}
-
-pg = st.navigation(pages)
-pg.run()
 
 st.title("RAG - AI 4 CI")
 
@@ -83,6 +74,17 @@ def page2():
   fig = df_visualisation(df)
   st.plotly_chart(fig)
 
+
+pages = {
+    "Your account" : [
+       st.Page(page2, title="Visulaisation", icon="🔥"),
+
+    ]
+    
+}
+
+pg = st.navigation(pages)
+pg.run()
 
 
 def organize_files_by_extension(source_directory):
