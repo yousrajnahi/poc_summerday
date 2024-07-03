@@ -2,6 +2,7 @@ __import__('pysqlite3')
 import sys
 sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 import streamlit as st
+from pinecone import Pinecone, ServerlessSpec
 from langchain_groq import ChatGroq
 from langchain.chains import RetrievalQA
 from langchain.prompts.prompt import PromptTemplate
