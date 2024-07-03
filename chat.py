@@ -21,10 +21,10 @@ from langchain_community.document_loaders import (UnstructuredFileLoader,
 import warnings
 import os
 import shutil
-from src.vector_store import get_vector_store, get_data_in_vector_store
-from src.embeddings import get_embeddings
-from src.displays import create_2d_embeddings, vectordb_to_dfdb, df_visualisation
-from src.document_processing import organize_files_by_extension,  load_documents, split_documents, save_uploaded_files, create_directory, remove_directory
+from src.vector_store import *
+from src.embeddings import *
+from src.displays import *
+from src.document_processing import *
 warnings.filterwarnings("ignore")
 
 st.title("RAG - AI 4 CI")
