@@ -49,9 +49,7 @@ except LookupError:
 from src.vector_store import get_vector_store, get_data_in_vector_store
 from src.embeddings import get_embeddings
 from src.displays import create_2d_embeddings, vectordb_to_dfdb, df_visualisation
-
-
-
+from src.document_processing import organize_files_by_extension,  load_documents, split_documents
 
 
 st.title("RAG - AI 4 CI")
@@ -66,7 +64,7 @@ spec=ServerlessSpec(cloud="aws", region="us-east-1")
 db, index = get_vector_store(index_name, namespace, embeddings, dimension, metric, spec)
 
 
-################################################# Display vector data ###################
+################################################# Display vector data #####################################
 
 if st.sidebar.button("View Data"):
   embeddings, chunks, vectors, vector_ids =  get_data_in_vector_store(index,namespace)
@@ -76,11 +74,7 @@ if st.sidebar.button("View Data"):
   fig = df_visualisation(df)
   st.plotly_chart(fig)
 
-########################################################################################################
-
-
-
-
+############################################################################################################
 
 ############################################ upload files ###################################################
 # File uploader in the sidebar
@@ -123,18 +117,10 @@ if uploaded_files:
     for uploaded_file in uploaded_files:
         # Path for the new file in the specified directory
         temp_file = os.path.join(directory, uploaded_file.name)
-        
         # Write the uploaded file to the new file on disk
         with open(temp_file, "wb") as file:
             file.write(uploaded_file.getvalue())
         
-        # Here you can add further processing of the files as needed
-        # For example, loading and processing documents
-        #documents = load_documents(temp_file)  # Assuming load_documents is a function you've defined
-        #chunks = split_documents(documents)     # Assuming split_documents is another function
-        
-        # Assuming db.add_documents is a method to add texts to your database
-        #db.add_documents(chunks)
     extensions_dict = organize_files_by_extension(directory)
     for ext, files in extensions_dict.items():
         # Create the glob pattern for the files of this extension
