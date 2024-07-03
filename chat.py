@@ -50,6 +50,20 @@ from src.vector_store import get_vector_store
 from src.embeddings import get_embeddings
 
 st.title("RAG - AI 4 CI")
+
+index_name = "docs-rag-summerday"
+namespace = "summerday-space"
+embedding_model_name = "all-MiniLM-L6-v2"
+embeddings = get_embeddings(embedding_model_name)
+dimension=384 
+metric="cosine"
+spec=ServerlessSpec(cloud="aws", region="us-east-1")
+db, index = get_vector_store(index_name, namespace, embeddings, dimension, metric, spec)
+
+
+
+
+
 def organize_files_by_extension(source_directory):
     # Initialize an empty dictionary to hold files organized by their extensions
     organized_dict = {}
@@ -88,14 +102,12 @@ def split_documents(documents):
 
 
 
-index_name = "docs-rag-summerday"
-namespace = "summerday-space"
-embedding_model_name = "all-MiniLM-L6-v2"
-embeddings = get_embeddings(embedding_model_name)
-dimension=384 
-metric="cosine"
-spec=ServerlessSpec(cloud="aws", region="us-east-1")
-db, index = get_vector_store(index_name, namespace, embeddings, dimension, metric, spec)
+
+
+
+
+
+
 
 
 # Function to fetch and process data
