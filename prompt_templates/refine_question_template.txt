@@ -1,0 +1,10 @@
+Here is the relevant history:
+------------
+{history}
+------------
+Context information is below.
+------------
+{context_str}
+------------
+Given the context information, history, and no prior knowledge, answer the question: 
+{question}
