@@ -51,7 +51,9 @@ from src.embeddings import get_embeddings
 
 pages = {
     "Your account" : [
-        st.Page("vectordb_visualisation.py", title="Visulaisation"),
+      st.Page("vectordb_visualisation.py", title="Visulaisation", icon="🔥"),
+       st.Page("vectordb_visualisation.py", title="Visulaisation"), icon="🔥"),
+
     ]
     
 }
