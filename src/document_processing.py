@@ -64,4 +64,10 @@ def save_uploaded_files(uploaded_files, directory):
         # Write the uploaded file to the new file on disk
         with open(temp_file, "wb") as file:
             file.write(uploaded_file.getvalue())
-
+            
+def create_directory(directory_path):
+    # Check if the directory exists, and if not, create it
+    if not os.path.exists(directory_path):
+        os.makedirs(directory_path)
+    
+    return directory_path
