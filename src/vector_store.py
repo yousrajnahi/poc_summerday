@@ -12,3 +12,18 @@ def get_vector_store(index_name, namespace, embeddings, dimension, metric, spec)
   db = PineconeVectorStore(index_name=index_name, embedding=embeddings, namespace=namespace)
   index = pc.Index(name=index_name)
   return db, index
+
+
+
+# Function to fetch and process data
+def get_data_in_vector_store(index,namespace):
+    id = []
+    for ids in index.list(namespace=namespace):
+        id.append(ids)
+    all_ids = sum(id, [])
+    vector_ids = [id for id in all_ids]
+    response = index.fetch(ids=vector_ids, namespace=namespace)
+    vectors = [vector_info['values'] for vector_info in response['vectors'].values()]
+    chunks = [vector_info['metadata'] for vector_info in response['vectors'].values()]
+    embeddings = np.array(vectors)
+    return embeddings, chunks, vectors, vector_ids
