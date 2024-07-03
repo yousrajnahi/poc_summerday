@@ -2,55 +2,19 @@ __import__('pysqlite3')
 import sys
 sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 import streamlit as st
-import os
-from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_pinecone import PineconeVectorStore
 from langchain_groq import ChatGroq
 from langchain.chains import RetrievalQA
 from langchain.prompts.prompt import PromptTemplate
 from langchain.memory import ConversationBufferMemory
-from pinecone import Pinecone, ServerlessSpec
 from langchain.output_parsers.regex import RegexParser
 import warnings
-import subprocess
-import shutil
-import pacmap
-import plotly.express as px
-import numpy as np
-import pandas as pd
-
-
-from langchain_community.document_loaders import PDFMinerLoader, DirectoryLoader
-from langchain.schema import Document
-from langchain.text_splitter import RecursiveCharacterTextSplitter,Language
 import os
-import tempfile
-from pdfminer.high_level import extract_text
-from langchain_community.document_loaders import (UnstructuredFileLoader,
-                                                  PDFMinerLoader,
-                                                  CSVLoader,
-                                                  JSONLoader,
-                                                  TextLoader,
-                                                  UnstructuredXMLLoader,
-                                                  UnstructuredHTMLLoader,
-                                                  UnstructuredMarkdownLoader,
-                                                  UnstructuredEmailLoader)
-
-
 import shutil
-import matplotlib.pyplot as plt
-
-import nltk
-try:
-    nltk.data.find('tokenizers/punkt')
-except LookupError:
-    nltk.download('punkt')
-
 from src.vector_store import get_vector_store, get_data_in_vector_store
 from src.embeddings import get_embeddings
 from src.displays import create_2d_embeddings, vectordb_to_dfdb, df_visualisation
 from src.document_processing import organize_files_by_extension,  load_documents, split_documents
-
+warnings.filterwarnings("ignore")
 
 st.title("RAG - AI 4 CI")
 
@@ -79,8 +43,6 @@ if st.sidebar.button("View Data"):
 ############################################ upload files ###################################################
 # File uploader in the sidebar
 uploaded_files = st.sidebar.file_uploader("Upload Documents", accept_multiple_files=True)
-
-
 # Define a mapping from file extensions to loader classes
 loader_cls_map = {
     'md': UnstructuredMarkdownLoader,
@@ -93,7 +55,6 @@ loader_cls_map = {
     'json': JSONLoader,
     'default': UnstructuredFileLoader
 }
-
 # Define a mapping from file extensions to arguments loader
 loader_kwargs_map = {
                     
@@ -103,14 +64,12 @@ loader_kwargs_map = {
               'json' : {'jq_schema':'.[] | "MainTask: \(.MainTask), MainTaskSummary: \(.MainTaskSummary), Tips: \(.Tips)  "' },
               'default': { 'strategy' :"fast"}
 }
-
 # Directory where you want to save the files
 directory = "./Internal_data"
 
 # Check if the directory exists, and if not, create it
 if not os.path.exists(directory):
     os.makedirs(directory)
-
 
 # Check if files were uploaded
 if uploaded_files:
@@ -145,7 +104,7 @@ if os.path.exists(directory):
 # Configure your environment
 os.environ['PINECONE_API_KEY'] = st.secrets['PINECONE_API_KEY'] 
 os.environ['GROQ_API_KEY'] = st.secrets['GROQ_API_KEY'] 
-warnings.filterwarnings("ignore")
+
 
 
 
