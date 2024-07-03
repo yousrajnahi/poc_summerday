@@ -73,3 +73,7 @@ def create_directory(directory_path):
 def remove_directory(directory_path):
     if os.path.exists(directory_path):
         shutil.rmtree(directory_path)
+
+def read_template_from_file(file_path):
+    with open(file_path, 'r') as file:
+        return file.read()
