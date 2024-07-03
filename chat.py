@@ -75,17 +75,10 @@ def page2():
   st.plotly_chart(fig)
 
 
-pages = {
-    "Your account" : [
-      st.Page("chat.py", title="Visulaisation", icon="🔥"),
-       st.Page(page2, title="Visulaisation", icon="🔥"),
+if st.button("Home"):
+  st.switch_page(page2)
 
-    ]
-    
-}
 
-pg = st.navigation(pages)
-pg.run()
 
 
 def organize_files_by_extension(source_directory):
