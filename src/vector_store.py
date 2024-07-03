@@ -1,6 +1,7 @@
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_pinecone import PineconeVectorStore
 from pinecone import Pinecone, ServerlessSpec
+import numpy as np
 import os 
 
 
