@@ -7,6 +7,7 @@ import shutil
 import matplotlib.pyplot as plt
 from src.vector_store import get_vector_store, get_data_in_vector_store
 from src.embeddings import get_embeddings
+from pinecone import Pinecone, ServerlessSpec
 
 # Function to create 2D embeddings
 def create_2d_embeddings(embeddings):
