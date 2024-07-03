@@ -48,7 +48,7 @@ except LookupError:
 
 from src.vector_store import get_vector_store, get_data_in_vector_store
 from src.embeddings import get_embeddings
-from pages.vectordb_visualisation import get_data_in_vector_store, create_2d_embeddings,vectordb_to_dfdb,df_visualisation
+from pages.vectordb_visualisation import create_2d_embeddings, vectordb_to_dfdb, df_visualisation
 
 
 
