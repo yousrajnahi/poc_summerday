@@ -18,11 +18,8 @@ def get_vector_store(index_name, namespace, embeddings, dimension, metric, spec)
 
 # Function to fetch and process data
 def get_data_in_vector_store(index,namespace):
-    id = []
-    for ids in index.list(namespace=namespace):
-        id.append(ids)
-    all_ids = sum(id, [])
-    vector_ids = [id for id in all_ids]
+    vector_ids = list(chain.from_iterable(index.list(namespace=namespace)))
+    print(vector_ids)
     response = index.fetch(ids=vector_ids, namespace=namespace)
     vectors = [vector_info['values'] for vector_info in response['vectors'].values()]
     chunks = [vector_info['metadata'] for vector_info in response['vectors'].values()]
