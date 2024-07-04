@@ -10,7 +10,7 @@ from langchain_community.document_loaders import (UnstructuredFileLoader, PDFMin
 st.title("Document Upload")
 
 # Initialize vector store
-db, index, namespace = initialize_vector_store()
+db, index, namespace, embeddings_model = initialize_vector_store()
 
 # File uploader
 uploaded_files = st.file_uploader("Upload Documents", accept_multiple_files=True)
