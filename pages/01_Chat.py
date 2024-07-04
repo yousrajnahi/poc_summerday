@@ -1,6 +1,8 @@
 import streamlit as st
 import os
 from src.utils import initialize_vector_store, get_or_create_retrieval_chain
+import numpy as np 
+from sklearn.metrics.pairwise import cosine_similarity
 
 
 st.title("Chat")
@@ -42,7 +44,6 @@ if prompt := st.chat_input("What is up?"):
             prompt = ' '.join(prompt.split()[:500])
         response = retrieval_chain.run(prompt)
         query_vector = embeddings.embed_query(response)
-        st.markdown(f"- {query_vector}")
         # Convert query_vector to 2D array
         query_vector_2d = np.array([query_vector], dtype=np.float32)
         matching_docs = db.as_retriever(search_type='mmr').get_relevant_documents(prompt)
