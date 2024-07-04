@@ -18,7 +18,7 @@ default_model = "llama3-70b-8192"
 selected_model = st.sidebar.selectbox("Choose a model:", options=model_options, index=model_options.index(default_model))
 
 # Initialize vector store
-db, index, namespace = initialize_vector_store()
+db, index, namespace, embeddings_model = initialize_vector_store()
 
 # Get or create retrieval chain
 retrieval_chain = get_or_create_retrieval_chain(selected_chain_type, selected_model, db)
@@ -41,6 +41,8 @@ if prompt := st.chat_input("What is up?"):
             st.warning(f"Your input is too long and will be truncated to fit the model's limit of 500 tokens.")
             prompt = ' '.join(prompt.split()[:500])
         response = retrieval_chain.run(prompt)
+        query_vector = embeddings_model.embed_query(user_query)
+        st.markdown(f"- {query_vector}")
         matching_docs = db.as_retriever(search_type='mmr').get_relevant_documents(prompt)
         sources = [doc.metadata.get("source", doc.metadata) for doc in matching_docs]
         st.markdown(response)
