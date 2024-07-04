@@ -9,7 +9,7 @@ st.title("Data Visualization")
 # Initialize vector store
 db, index, namespace = initialize_vector_store()
 
-if st.button("View Data"):
+if st.sidebar.button("View Data"):
     with st.spinner("Fetching and processing data..."):
         embeddings, chunks, vectors, vector_ids = get_data_in_vector_store(index, namespace)
         documents_projected = create_2d_embeddings(embeddings)
