@@ -18,7 +18,7 @@ default_model = "llama3-70b-8192"
 selected_model = st.sidebar.selectbox("Choose a model:", options=model_options, index=model_options.index(default_model))
 
 # Initialize vector store
-db, index = initialize_vector_store()
+db, index, namespace = initialize_vector_store()
 
 # Get or create retrieval chain
 retrieval_chain = get_or_create_retrieval_chain(selected_chain_type, selected_model, db)
