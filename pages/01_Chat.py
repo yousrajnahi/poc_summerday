@@ -42,7 +42,7 @@ if prompt := st.chat_input("What is up?"):
             prompt = ' '.join(prompt.split()[:500])
         response = retrieval_chain.run(prompt)
         query_vector = embeddings.embed_query(response)
-        st.markdown(f"- {response}")
+        st.markdown(f"- {query_vector}")
         matching_docs = db.as_retriever(search_type='mmr').get_relevant_documents(prompt)
         sources = [doc.metadata.get("source", doc.metadata) for doc in matching_docs]
         st.markdown(response)
