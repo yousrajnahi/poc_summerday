@@ -1,23 +1,16 @@
 import streamlit as st
-from src.vector_store import get_vector_store
-from src.embeddings import get_embeddings
-from src.document_processing import create_directory, save_uploaded_files, organize_files_by_extension, load_documents, split_documents, remove_directory
+from src.utils import initialize_vector_store
+from src.document_processing import (create_directory, save_uploaded_files, organize_files_by_extension,
+                                     load_documents, split_documents, remove_directory)
 from langchain_community.document_loaders import (UnstructuredFileLoader, PDFMinerLoader, CSVLoader, JSONLoader,
                                                   TextLoader, UnstructuredXMLLoader, UnstructuredHTMLLoader,
                                                   UnstructuredMarkdownLoader, UnstructuredEmailLoader)
-from pinecone import ServerlessSpec
+
 
 st.title("Document Upload")
 
-# Initialize vector store and embeddings
-index_name = "docs-rag-summerday"
-namespace = "summerday-space"
-embedding_model_name = "all-MiniLM-L6-v2"
-embeddings = get_embeddings(embedding_model_name)
-dimension = 384
-metric = "cosine"
-spec = ServerlessSpec(cloud="aws", region="us-east-1")
-db, index = get_vector_store(index_name, namespace, embeddings, dimension, metric, spec)
+# Initialize vector store
+db, index = initialize_vector_store()
 
 # File uploader
 uploaded_files = st.file_uploader("Upload Documents", accept_multiple_files=True)
@@ -63,3 +56,4 @@ if uploaded_files:
     # Clean up
     remove_directory(directory)
     st.success("All documents processed and added to the vector store.")
+
