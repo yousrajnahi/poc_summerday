@@ -1,4 +1,8 @@
 import streamlit as st
+from src.utils import initialize_vector_store
+
+# Initialize vector store once
+initialize_vector_store()
 
 st.title("RAG - AI 4 CI")
 st.write("Welcome to our application. Use the sidebar to navigate between pages.")
