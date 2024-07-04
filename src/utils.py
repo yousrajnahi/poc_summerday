@@ -22,7 +22,7 @@ def initialize_vector_store():
         db, index = get_vector_store(index_name, namespace, embeddings, dimension, metric, spec)
         st.session_state.vector_store = db
         st.session_state.index = index
-        st.session_state.namespace = "summerday-space"
+        st.session_state.namespace = namespace
     return st.session_state.vector_store, st.session_state.index, st.session_state.namespace
 
 
