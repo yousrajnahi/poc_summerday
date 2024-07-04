@@ -34,7 +34,7 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
 if prompt := st.chat_input("What is up?"):
-    st.session_state.messages.append({"role": "user", "content": prompt, "source"," "})
+    st.session_state.messages.append({"role": "user", "content": prompt, "source":" "})
     with st.chat_message("user"):
         st.markdown(prompt)
 
@@ -55,7 +55,7 @@ if prompt := st.chat_input("What is up?"):
         for source, score in zip(sources, scores):
             similarity_percentage = score * 100
             st.markdown(f"- {source}: {similarity_percentage:.2f}%")
-    st.session_state.messages.append({"role": "assistant", "content": response,"source", sources})
+    st.session_state.messages.append({"role": "assistant", "content": response,"source": sources})
 
 # Sidebar Clear Chat Button
 if st.sidebar.button("Clear Chat"):
