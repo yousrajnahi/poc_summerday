@@ -45,16 +45,14 @@ if prompt := st.chat_input("What is up?"):
         st.markdown(f"- {query_vector}")
         # Convert query_vector to 2D array
         query_vector_2d = np.array([query_vector], dtype=np.float32)
-        # Filtering to find rows where 'symbol' is 'star' and 'size_col' is 4
-        matching_docs_vectors = np.array(list(df[(df['symbol'] == 'star') & (df['size_col'] == 4)]['vector']))
-        scores = list(cosine_similarity(query_vector_2d, matching_docs_vectors)[0])
         matching_docs = db.as_retriever(search_type='mmr').get_relevant_documents(prompt)
+        matching_docs_vectors = np.array([embeddings_model.embed_documents([doc.page_content])[0] for doc in matching_docs])
+        scores = list(cosine_similarity(query_vector_2d, matching_docs_vectors)[0])
         sources = [doc.metadata.get("source", doc.metadata) for doc in matching_docs]
         st.markdown(response)
-        if sources:
-            st.markdown("### Sources:")
-            for source in sources:
-                st.markdown(f"- {source}")
+        st.markdown("### Sources:")
+        for source, score in zip(sources, scores):
+            st.markdown(f"- {source}: {score:.4f}")
     st.session_state.messages.append({"role": "assistant", "content": response})
 
 # Sidebar Clear Chat Button
