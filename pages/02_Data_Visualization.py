@@ -7,7 +7,7 @@ from src.displays import vectordb_to_dfdb, df_visualisation, create_2d_embedding
 st.title("Data Visualization")
 
 # Initialize vector store
-db, index, namespace, embeddings_model = initialize_vector_store()
+db, index, namespace, embeddings = initialize_vector_store()
 
 if st.sidebar.button("View Data"):
     with st.spinner("Fetching and processing data..."):
