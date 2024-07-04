@@ -43,7 +43,7 @@ if prompt := st.chat_input("What is up?"):
             st.warning(f"Your input is too long and will be truncated to fit the model's limit of 500 tokens.")
             prompt = ' '.join(prompt.split()[:500])
         response = retrieval_chain.run(prompt)
-        query_vector = embeddings.embed_query(response)
+        query_vector = embeddings.embed_query(prompt)
         # Convert query_vector to 2D array
         query_vector_2d = np.array([query_vector], dtype=np.float32)
         matching_docs = db.as_retriever(search_type='mmr').get_relevant_documents(prompt)
