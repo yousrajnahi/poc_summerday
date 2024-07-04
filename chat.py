@@ -5,7 +5,7 @@ from src.utils import initialize_vector_store
 
 st.title("RAG - AI 4 CI")
 st.write("Welcome to our application. Use the sidebar to navigate between pages.")
-st.Page("chat.py", title="Home", icon="🏚"),
+st.Page("chat.py", title="Home", icon=":material/favorite:")
 
 st.markdown("""
 ## Features:
