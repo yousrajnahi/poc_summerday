@@ -11,7 +11,7 @@ db, index = initialize_vector_store()
 
 if st.button("View Data"):
     with st.spinner("Fetching and processing data..."):
-        embeddings, chunks, vectors, vector_ids = get_data_in_vector_store(index, st.session_state.vector_store.namespace)
+        embeddings, chunks, vectors, vector_ids = get_data_in_vector_store(index, "summerday-space")
         documents_projected = create_2d_embeddings(embeddings)
         df = vectordb_to_dfdb(documents_projected, chunks, vectors, vector_ids)
         
