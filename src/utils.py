@@ -23,7 +23,7 @@ def initialize_vector_store():
         st.session_state.vector_store = db
         st.session_state.index = index
         st.session_state.namespace = "summerday-space"
-    return st.session_state.vector_store, st.session_state.index
+    return st.session_state.vector_store, st.session_state.index, st.session_state.namespace
 
 
 def get_or_create_retrieval_chain(selected_chain_type, selected_model, db):
