@@ -5,6 +5,7 @@ from langchain.chains import RetrievalQA
 from langchain.prompts.prompt import PromptTemplate
 from langchain.memory import ConversationBufferMemory
 from langchain.output_parsers.regex import RegexParser
+from pinecone import Pinecone, ServerlessSpec
 from src.vector_store import get_vector_store
 from src.embeddings import get_embeddings
 from src.document_processing import read_template_from_file
