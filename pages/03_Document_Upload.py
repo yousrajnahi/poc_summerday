@@ -51,7 +51,7 @@ if uploaded_files:
             documents = load_documents(directory, glob_pattern, loader_class, loader_args)
             chunks = split_documents(documents)
             db.add_documents(chunks)
-            st.success(f"{ext.upper()} documents added successfully")
+            st.toast(str(ext) + ' docs added successfully', icon="✅")
 
     # Clean up
     remove_directory(directory)
