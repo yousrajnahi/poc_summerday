@@ -43,6 +43,11 @@ if prompt := st.chat_input("What is up?"):
         response = retrieval_chain.run(prompt)
         query_vector = embeddings.embed_query(response)
         st.markdown(f"- {query_vector}")
+        # Convert query_vector to 2D array
+        query_vector_2d = np.array([query_vector], dtype=np.float32)
+        # Filtering to find rows where 'symbol' is 'star' and 'size_col' is 4
+        matching_docs_vectors = np.array(list(df[(df['symbol'] == 'star') & (df['size_col'] == 4)]['vector']))
+        scores = list(cosine_similarity(query_vector_2d, matching_docs_vectors)[0])
         matching_docs = db.as_retriever(search_type='mmr').get_relevant_documents(prompt)
         sources = [doc.metadata.get("source", doc.metadata) for doc in matching_docs]
         st.markdown(response)
