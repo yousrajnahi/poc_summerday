@@ -1,7 +1,7 @@
 import streamlit as st
 from src.utils import initialize_vector_store
 from src.vector_store import get_data_in_vector_store
-from src.displays import vectordb_to_dfdb, df_visualisation? create_2d_embeddings
+from src.displays import vectordb_to_dfdb, df_visualisation, create_2d_embeddings
 
 
 st.title("Data Visualization")
