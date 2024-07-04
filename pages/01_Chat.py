@@ -53,7 +53,8 @@ if prompt := st.chat_input("What is up?"):
         st.markdown(response)
         st.markdown("### Sources:")
         for source, score in zip(sources, scores):
-            st.markdown(f"- {source}: {score:.4f}")
+            similarity_percentage = score * 100
+            st.markdown(f"- {source}: {similarity_percentage:.2f}%")
     st.session_state.messages.append({"role": "assistant", "content": response})
 
 # Sidebar Clear Chat Button
