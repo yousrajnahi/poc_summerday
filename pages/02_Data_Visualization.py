@@ -1,7 +1,7 @@
 import streamlit as st
 from src.vector_store import get_vector_store, get_data_in_vector_store
-from src.embeddings import get_embeddings, create_2d_embeddings
-from src.displays import vectordb_to_dfdb, df_visualisation
+from src.embeddings import get_embeddings
+from src.displays import vectordb_to_dfdb, df_visualisation, create_2d_embeddings
 from pinecone import ServerlessSpec
 
 st.title("Data Visualization")
