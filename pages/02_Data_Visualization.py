@@ -20,7 +20,7 @@ if st.sidebar.button("View Data"):
 
         documents_projected = create_2d_embeddings(embeddings)
         df = vectordb_to_dfdb(documents_projected, chunks, vectors, vector_ids)
-        
+        st.write(df)
         # Mark the user query point if it exists
         if 'last_query' in st.session_state:
             df.loc[df['id'] == 'id_user_query', 'symbol'] = 'star'
