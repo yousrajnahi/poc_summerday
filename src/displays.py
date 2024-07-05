@@ -13,7 +13,7 @@ from sklearn.manifold import TSNE
 def create_2d_embeddings(embeddings):
     # Perform t-SNE
     np.random.seed(42)
-    tsne = TSNE(n_components=2, random_state=42)
+    tsne = TSNE(n_components=2, random_state=42, method='exact')
     embeddings_2d = tsne.fit_transform(embeddings)
     # Normalize the embeddings
     #scaler = MinMaxScaler(feature_range=(-1, 1))
