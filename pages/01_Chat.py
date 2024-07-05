@@ -19,7 +19,7 @@ st.sidebar.markdown("### Prompt Parameters")
 
 # Sidebar for model and chain type selection
 chain_types = ['stuff', "refine", "map_reduce", "map_rerank"]
-default_chain_type = 'map_rerank'
+default_chain_type = 'refine'
 selected_chain_type = st.sidebar.selectbox("Choose a chain type:", options=chain_types, index = chain_types.index(default_chain_type))
 
 # Add a divider
