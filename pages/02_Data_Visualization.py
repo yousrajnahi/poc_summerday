@@ -24,7 +24,7 @@ if st.sidebar.button("View Data"):
             vector_ids.append("id_user_query")
             
         documents_projected = create_2d_embeddings(embeddings)
-        print(len(documents_projected), len(chunks), len(vectors), len(vector_ids))
+        
         
         df = vectordb_to_dfdb(documents_projected, chunks, vectors, vector_ids, matching_docs)
         
