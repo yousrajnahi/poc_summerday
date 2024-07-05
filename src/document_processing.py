@@ -76,10 +76,13 @@ def load_documents(DATA_PATH, glob_pattern,loader_class, loader_args):
     documents = loader.load()
     return documents
 
-def split_documents(documents):
-    text_splitter =  RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
-    texts = text_splitter.split_documents(documents)
-    return texts
+def split_text(documents,text_splitter_map,text_splitter_class):
+    if text_splitter_class in ['csv', 'json']: # If the document is CSV or JSON, return it unchanged
+        return documents
+    text_splitter = text_splitter_map.get(text_splitter_class,text_splitter_map['default'])
+    chunks = text_splitter.split_documents(documents)
+    print(f"Split {len(documents)} documents into {len(chunks)} chunks.")
+    return chunks
 
 def save_uploaded_files(uploaded_files, directory):
     for uploaded_file in uploaded_files:
