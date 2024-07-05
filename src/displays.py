@@ -10,8 +10,8 @@ from sklearn.manifold import TSNE
 
 # Function to create 2D embeddings
 def create_2d_embeddings(embeddings):
-    embedding_projector = TSNE(n_components=2, random_state=42, perplexity=30, n_iter=1000)
-    embeddings_2d = embedding_projector.fit_transform(embeddings)
+    tsne = TSNE(n_components=2, random_state=42, perplexity=30, n_iter=5000, learning_rate='auto', init='pca')
+    embeddings_2d = tsne.fit_transform(embeddings)
     return embeddings_2d
 
 def vectordb_to_dfdb(documents_projected, chunks, vectors, vector_ids, matching_docs=None):
