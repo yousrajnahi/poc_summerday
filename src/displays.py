@@ -15,7 +15,11 @@ def create_2d_embeddings(embeddings):
     return embeddings_2d
 
 def vectordb_to_dfdb(documents_projected, chunks, vectors, vector_ids, matching_docs=None):
-    df = pd.DataFrame.from_dict(
+   if matching_docs:
+       source_matching_docs =[doc.metadata['source'] for doc in matching_docs]
+       text_matching_docs =[doc.page_content for doc in matching_docs]
+       
+   df = pd.DataFrame.from_dict(
         [
             {
                 "x": documents_projected[i, 0],
@@ -23,18 +27,14 @@ def vectordb_to_dfdb(documents_projected, chunks, vectors, vector_ids, matching_
                 "source": chunks[i]["source"].split("/")[-1],
                 "extract": chunks[i]['text'][:100] + "...",
                 "size_col": 4,
-                "symbol": "circle",
+                "symbol": "star" if (source_matching_docs and chunks[i]["source"] in source_matching_docs and 
+                                     text_matching_docs and chunks[i]['text'] in text_matching_docs) else "circle",
                 'vector': vectors[i],
                 'id': vector_ids[i]
             }
             for i in range(len(chunks))
         ]
     )
-    
-    # Mark matching documents if provided
-    if matching_docs:
-        df.loc[df['source'].isin([doc.split("/")[-1] for doc in matching_docs]), 'symbol'] = 'star'
-    
     return df
 
 def df_visualisation(df):
