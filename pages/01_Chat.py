@@ -18,6 +18,17 @@ model_options = ["gemma-7b-it", "mixtral-8x7b-32768", "llama3-70b-8192", "llama3
 default_model = "llama3-70b-8192"
 selected_model = st.sidebar.selectbox("Choose a model:", options=model_options, index=model_options.index(default_model))
 
+# Add search type selection and parameter inputs in the sidebar
+st.sidebar.markdown("### Retriever Parameters")
+search_type = st.sidebar.selectbox("Search type", ['similarity', 'similarity_score_threshold', 'mmr'])
+
+k_value = st.sidebar.slider("Number of documents to retrieve (k)", min_value=1, max_value=20, value=6)
+
+if search_type == 'similarity_score_threshold':
+    score_threshold = st.sidebar.slider("Score threshold", min_value=0.0, max_value=1.0, value=0.5, step=0.01)
+elif search_type == 'mmr':
+    lambda_mult = st.sidebar.slider("Diversity of results (lambda_mult)", min_value=0.0, max_value=1.0, value=0.25, step=0.05)
+
 # Initialize vector store
 db, index, namespace, embeddings = initialize_vector_store()
 
@@ -47,13 +58,28 @@ if prompt := st.chat_input("What is up?"):
         response = retrieval_chain.run(prompt)
         query_vector = embeddings.embed_query(prompt)
         query_vector_2d = np.array([query_vector], dtype=np.float32)
-        matching_docs = db.as_retriever(search_type='mmr',search_kwargs={'k': 6, 'lambda_mult': 0.25}).get_relevant_documents(prompt)
+        
+        # Use the user-selected search type and parameters
+        search_kwargs = {'k': k_value}
+        if search_type == 'similarity_score_threshold':
+            search_kwargs['score_threshold'] = score_threshold
+        elif search_type == 'mmr':
+            search_kwargs['lambda_mult'] = lambda_mult
+        
+        matching_docs = db.as_retriever(search_type=search_type, search_kwargs=search_kwargs).get_relevant_documents(prompt)
+        
         matching_docs_vectors = np.array([embeddings.embed_documents([doc.page_content])[0] for doc in matching_docs])
         scores = list(cosine_similarity(query_vector_2d, matching_docs_vectors)[0])
         sources = [doc.metadata.get("source", doc.metadata) for doc in matching_docs]
         
         # Merge response with sources
-        full_response = response + "\n\n### Sources:\n"
+        full_response = response + f"\n\n### Sources (search_type={search_type}, k={k_value}"
+        if search_type == 'similarity_score_threshold':
+            full_response += f", score_threshold={score_threshold}"
+        elif search_type == 'mmr':
+            full_response += f", lambda_mult={lambda_mult}"
+        full_response += "):\n"
+        
         for source, score in zip(sources, scores):
             similarity_percentage = score * 100
             full_response += f"- {source}: {similarity_percentage:.2f}%\n"
