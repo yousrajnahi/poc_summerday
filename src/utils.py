@@ -73,7 +73,7 @@ def get_or_create_retrieval_chain(selected_chain_type, selected_model, db):
         retrieval_chain = RetrievalQA.from_chain_type(
             llm, 
             chain_type=selected_chain_type, 
-            retriever=db.as_retriever(search_type='mmr'), 
+            retriever=db.as_retriever(search_type='mmr', search_kwargs={'k': 6, 'lambda_mult': 0.25}), 
             chain_type_kwargs=args
         )
 
