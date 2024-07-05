@@ -13,12 +13,12 @@ from sklearn.preprocessing import MinMaxScaler
 def create_2d_embeddings(embeddings):
     # Perform t-SNE
     np.random.seed(42)
-    tsne = TSNE(n_components=2, random_state=42, metric = 'cosine', perplexity=70, n_iter=8000)
+    tsne = TSNE(n_components=2, random_state=42, metric ='cosine')
     embeddings_2d = tsne.fit_transform(embeddings)
     # Normalize the embeddings
-    scaler = MinMaxScaler(feature_range=(0, 1))
-    embeddings_2d_normalized = scaler.fit_transform(embeddings_2d)
-    return embeddings_2d_normalized
+    #scaler = MinMaxScaler(feature_range=(0, 1))
+    #embeddings_2d_normalized = scaler.fit_transform(embeddings_2d)
+    return embeddings_2d
 
 def vectordb_to_dfdb(documents_projected, chunks, vectors, vector_ids, matching_docs=None):
     source_matching_docs = []
