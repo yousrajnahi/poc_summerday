@@ -10,6 +10,10 @@ st.title("Chat")
 os.environ['PINECONE_API_KEY'] = st.secrets['PINECONE_API_KEY'] 
 os.environ['GROQ_API_KEY'] = st.secrets['GROQ_API_KEY'] 
 
+# Sidebar Clear Chat Button
+if st.sidebar.button("Clear Chat"):
+    st.session_state.messages.clear()
+    st.rerun()
 
 st.sidebar.markdown("### Prompt Parameters")
 
@@ -98,7 +102,4 @@ if prompt := st.chat_input("What is up?"):
         st.markdown(full_response)
         st.session_state.messages.append({"role": "assistant", "content": full_response})
 
-# Sidebar Clear Chat Button
-if st.sidebar.button("Clear Chat"):
-    st.session_state.messages.clear()
-    st.rerun()
+
