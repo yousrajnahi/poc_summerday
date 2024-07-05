@@ -13,6 +13,9 @@ if st.sidebar.button("View Data"):
     with st.spinner("Fetching and processing data..."):
         embeddings, chunks, vectors, vector_ids = get_data_in_vector_store(index, namespace)
         
+        # Get matching documents if they exist
+        matching_docs = st.session_state.get('source_matching_docs', [])
+        
         # Check if there's a last query to include
         if 'last_query' in st.session_state and 'last_query_vector' in st.session_state:
             embeddings = np.append(embeddings, [st.session_state['last_query_vector']], axis=0)
@@ -20,19 +23,15 @@ if st.sidebar.button("View Data"):
             vectors.append(st.session_state['last_query_vector'])
             vector_ids.append("id_user_query")
             
-
         documents_projected = create_2d_embeddings(embeddings)
         print(len(documents_projected), len(chunks), len(vectors), len(vector_ids))
-        df = vectordb_to_dfdb(documents_projected, chunks, vectors, vector_ids)
+        
+        df = vectordb_to_dfdb(documents_projected, chunks, vectors, vector_ids, matching_docs)
+        
         # Mark the user query point if it exists
         if 'last_query' in st.session_state:
             df.loc[df['id'] == 'id_user_query', 'symbol'] = 'star'
-            df.loc[df['id'] == 'id_user_query', 'size_col'] = 4  # Make user query point larger
-
-        # Mark the matching documents if they exist
-        if 'source_matching_docs' in st.session_state:
-            for source in st.session_state['source_matching_docs']:
-                df.loc[df['source'] == source.split("/")[-1], 'symbol'] = 'star'
+            df.loc[df['id'] == 'id_user_query', 'size_col'] = 100  # Make user query point larger
         
     st.write("Data from Vector Store:")
     st.write(df)
