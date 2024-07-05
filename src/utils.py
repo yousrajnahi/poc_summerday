@@ -27,12 +27,13 @@ def initialize_vector_store():
     return st.session_state.vector_store, st.session_state.index, st.session_state.namespace, st.session_state.embeddings
 
 
-def get_or_create_retrieval_chain(selected_chain_type, selected_model, db, search_type, search_kwargs):
+def get_or_create_retrieval_chain(selected_chain_type, selected_model, db, search_type, search_kwargs, temperature):
     if 'retrieval_chain' not in st.session_state or \
        st.session_state.selected_chain_type != selected_chain_type or \
        st.session_state.selected_model != selected_model or \
        st.session_state.search_type != search_type or \
-       st.session_state.search_kwargs != search_kwargs:
+       st.session_state.search_kwargs != search_kwargs or \
+       st.session_state.temperature != temperature:
         
         # Load templates
         templates = {
@@ -67,8 +68,8 @@ def get_or_create_retrieval_chain(selected_chain_type, selected_model, db, searc
             }
         }   
 
-        # Setup Groq
-        llm = ChatGroq(temperature=0, model_name=selected_model)
+        # Setup Groq with user-defined temperature
+        llm = ChatGroq(temperature=temperature, model_name=selected_model)
         
         # Setup the retrieval_chain with user-selected search type and parameters
         args = chain_type_kwargs.get(selected_chain_type, chain_type_kwargs['stuff'])
@@ -84,5 +85,6 @@ def get_or_create_retrieval_chain(selected_chain_type, selected_model, db, searc
         st.session_state.selected_model = selected_model
         st.session_state.search_type = search_type
         st.session_state.search_kwargs = search_kwargs
+        st.session_state.temperature = temperature
     
     return st.session_state.retrieval_chain
