@@ -14,18 +14,17 @@ if st.sidebar.button("View Data"):
         
         # Check if there's a last query to include
         if 'last_query' in st.session_state and 'last_query_vector' in st.session_state:
-            embeddings.append(st.session_state['last_query_vector'])
             chunks.append({"source": "User query", "text": st.session_state['last_query']})
             vectors.append(st.session_state['last_query_vector'])
-            vector_ids.append("user_query")
+            vector_ids.append("id_user_query")
 
         documents_projected = create_2d_embeddings(embeddings)
         df = vectordb_to_dfdb(documents_projected, chunks, vectors, vector_ids)
         
         # Mark the user query point if it exists
         if 'last_query' in st.session_state:
-            df.loc[df['id'] == 'user_query', 'symbol'] = 'star'
-            df.loc[df['id'] == 'user_query', 'size_col'] = 10  # Make user query point larger
+            df.loc[df['id'] == 'id_user_query', 'symbol'] = 'star'
+            df.loc[df['id'] == 'id_user_query', 'size_col'] = 10  # Make user query point larger
         
     st.write("Data from Vector Store:")
     st.write(df)
