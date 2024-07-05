@@ -39,6 +39,8 @@ def df_visualisation(df):
   colors = plt.get_cmap('tab20')(np.linspace(0, 1, num_unique_sources))
   color_discrete_map = {source: f'rgb({int(rgb[0]*255)}, {int(rgb[1]*255)}, {int(rgb[2]*255)})'
                       for source, rgb in zip(df['source'].unique(), colors)}
+  # Ensure user query has a distinct color
+  color_discrete_map["User query"] = "black"
   # Plot
   fig = px.scatter(df, x="x", y="y", color="source", hover_data="extract", size="size_col", symbol="symbol", size_max=3, color_discrete_map=color_discrete_map, width=1000, height=700)
   fig.update_traces(marker=dict(opacity=0.7,line=dict(width=0.5), sizemode='diameter'), selector=dict(mode="markers"))
