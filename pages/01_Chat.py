@@ -18,6 +18,9 @@ model_options = ["gemma-7b-it", "mixtral-8x7b-32768", "llama3-70b-8192", "llama3
 default_model = "llama3-70b-8192"
 selected_model = st.sidebar.selectbox("Choose a model:", options=model_options, index=model_options.index(default_model))
 
+# Add temperature slider
+temperature = st.sidebar.slider("Temperature", min_value=0.0, max_value=1.0, value=0.0, step=0.1)
+
 # Add search type selection and parameter inputs in the sidebar
 st.sidebar.markdown("### Retriever Parameters")
 search_type = st.sidebar.selectbox("Search type", ['similarity', 'similarity_score_threshold', 'mmr'])
@@ -36,7 +39,8 @@ elif search_type == 'mmr':
 db, index, namespace, embeddings = initialize_vector_store()
 
 # Get or create retrieval chain
-retrieval_chain = get_or_create_retrieval_chain(selected_chain_type, selected_model, db, search_type, search_kwargs)
+retrieval_chain = get_or_create_retrieval_chain(selected_chain_type, selected_model, db, search_type, search_kwargs, temperature)
+
 
 # Initialize session state for messages
 if "messages" not in st.session_state:
