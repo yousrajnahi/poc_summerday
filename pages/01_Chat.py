@@ -26,7 +26,7 @@ temperature = st.sidebar.slider("Temperature", min_value=0.0, max_value=1.0, val
 
 # Add search type selection and parameter inputs in the sidebar
 st.sidebar.markdown("### Retriever Parameters")
-search_type = st.sidebar.selectbox("Search type", ['similarity', 'similarity_score_threshold', 'mmr'])
+search_type = st.sidebar.selectbox("Choose a search type:", ['similarity', 'similarity_score_threshold', 'mmr'])
 k_value = st.sidebar.slider("Number of documents to retrieve (k)", min_value=1, max_value=20, value=6)
 
 # Define search_kwargs based on the selected search type
