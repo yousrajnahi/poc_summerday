@@ -27,10 +27,12 @@ def initialize_vector_store():
     return st.session_state.vector_store, st.session_state.index, st.session_state.namespace, st.session_state.embeddings
 
 
-def get_or_create_retrieval_chain(selected_chain_type, selected_model, db):
+def get_or_create_retrieval_chain(selected_chain_type, selected_model, db, search_type, search_kwargs):
     if 'retrieval_chain' not in st.session_state or \
        st.session_state.selected_chain_type != selected_chain_type or \
-       st.session_state.selected_model != selected_model:
+       st.session_state.selected_model != selected_model or \
+       st.session_state.search_type != search_type or \
+       st.session_state.search_kwargs != search_kwargs:
         
         # Load templates
         templates = {
@@ -68,17 +70,19 @@ def get_or_create_retrieval_chain(selected_chain_type, selected_model, db):
         # Setup Groq
         llm = ChatGroq(temperature=0, model_name=selected_model)
         
-        # Setup the retrieval_chain
+        # Setup the retrieval_chain with user-selected search type and parameters
         args = chain_type_kwargs.get(selected_chain_type, chain_type_kwargs['stuff'])
         retrieval_chain = RetrievalQA.from_chain_type(
             llm, 
             chain_type=selected_chain_type, 
-            retriever=db.as_retriever(search_type='mmr', search_kwargs={'k': 6, 'lambda_mult': 0.25}), 
+            retriever=db.as_retriever(search_type=search_type, search_kwargs=search_kwargs), 
             chain_type_kwargs=args
         )
 
         st.session_state.retrieval_chain = retrieval_chain
         st.session_state.selected_chain_type = selected_chain_type
         st.session_state.selected_model = selected_model
+        st.session_state.search_type = search_type
+        st.session_state.search_kwargs = search_kwargs
     
     return st.session_state.retrieval_chain
