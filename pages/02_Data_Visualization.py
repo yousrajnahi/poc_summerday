@@ -3,7 +3,7 @@ from src.utils import initialize_vector_store
 from src.vector_store import get_data_in_vector_store
 from src.displays import vectordb_to_dfdb, df_visualisation, create_2d_embeddings
 import numpy as np
-#np.random.seed(42)
+np.random.seed(42)
 
 st.title("Data Visualization")
 
