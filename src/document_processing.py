@@ -76,7 +76,7 @@ def load_documents(DATA_PATH, glob_pattern,loader_class, loader_args):
     documents = loader.load()
     return documents
 
-def split_text(documents,text_splitter_map,text_splitter_class):
+def split_documents(documents,text_splitter_map,text_splitter_class):
     if text_splitter_class in ['csv', 'json']: # If the document is CSV or JSON, return it unchanged
         return documents
     text_splitter = text_splitter_map.get(text_splitter_class,text_splitter_map['default'])
