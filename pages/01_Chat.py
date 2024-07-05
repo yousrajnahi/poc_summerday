@@ -73,13 +73,7 @@ if prompt := st.chat_input("What is up?"):
         sources = [doc.metadata.get("source", doc.metadata) for doc in matching_docs]
         
         # Merge response with sources
-        full_response = response + f"\n\n### Sources (search_type={search_type}, k={k_value}"
-        if search_type == 'similarity_score_threshold':
-            full_response += f", score_threshold={score_threshold}"
-        elif search_type == 'mmr':
-            full_response += f", lambda_mult={lambda_mult}"
-        full_response += "):\n"
-        
+        full_response = response + "\n\n### Sources:\n"
         for source, score in zip(sources, scores):
             similarity_percentage = score * 100
             full_response += f"- {source}: {similarity_percentage:.2f}%\n"
