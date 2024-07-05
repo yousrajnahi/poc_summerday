@@ -19,10 +19,11 @@ if st.sidebar.button("View Data"):
             chunks.append({"source": "User query", "text": st.session_state['last_query']})
             vectors.append(st.session_state['last_query_vector'])
             vector_ids.append("id_user_query")
-            print(len(documents_projected), len(chunks), len(vectors), len(vector_ids))
+            
 
 
         documents_projected = create_2d_embeddings(embeddings)
+        print(len(documents_projected), len(chunks), len(vectors), len(vector_ids))
         df = vectordb_to_dfdb(documents_projected, chunks, vectors, vector_ids)
         # Mark the user query point if it exists
         if 'last_query' in st.session_state:
