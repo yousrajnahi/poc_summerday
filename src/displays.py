@@ -31,8 +31,8 @@ def vectordb_to_dfdb(documents_projected, chunks, vectors, vector_ids, matching_
                 "extract": chunks[i]['text'][:100] + "...",
                 "size_col": 4,
                 "symbol": "star" if (matching_docs and 
-                                     chunks[i]["source"] in source_matching_docs and 
-                                     chunks[i]['text'] in text_matching_docs) else "circle",
+                                     chunks[i]["source"].split("/")[-1] in source_matching_docs and 
+                                     chunks[i]['text'][:100] + "..." in text_matching_docs) else "circle",
                 'vector': vectors[i],
                 'id': vector_ids[i]
             }
