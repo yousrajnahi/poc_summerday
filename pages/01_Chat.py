@@ -92,6 +92,7 @@ if prompt := st.chat_input("What is up?"):
         matching_docs_vectors = np.array([embeddings.embed_documents([doc.page_content])[0] for doc in matching_docs])
         scores = list(cosine_similarity(query_vector_2d, matching_docs_vectors)[0])
         sources = [doc.metadata.get("source", doc.metadata) for doc in matching_docs]
+        st.session_state['source_matching_docs'] = sources
         
         # Merge response with sources
         full_response = response + "\n\n### Sources:\n"
