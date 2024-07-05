@@ -12,7 +12,7 @@ np.random.seed(42)
 
 def create_2d_embeddings(embeddings):
     # Perform t-SNE
-    tsne = TSNE(n_components=2, random_state=42)
+    tsne = TSNE(n_components=2, random_state=42,n_iter=5000)
     embeddings_2d = tsne.fit_transform(embeddings)
     # Normalize the embeddings
     #scaler = MinMaxScaler(feature_range=(-1, 1))
