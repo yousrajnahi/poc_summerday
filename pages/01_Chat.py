@@ -88,11 +88,11 @@ if prompt := st.chat_input("What is up?"):
         st.session_state['last_query_vector'] = query_vector
         
         matching_docs = db.as_retriever(search_type=search_type, search_kwargs=search_kwargs).get_relevant_documents(prompt)
+        st.session_state['matching_docs'] = matching_docs
         
         matching_docs_vectors = np.array([embeddings.embed_documents([doc.page_content])[0] for doc in matching_docs])
         scores = list(cosine_similarity(query_vector_2d, matching_docs_vectors)[0])
         sources = [doc.metadata.get("source", doc.metadata) for doc in matching_docs]
-        st.session_state['source_matching_docs'] = sources
         
         # Merge response with sources
         full_response = response + "\n\n### Sources:\n"
