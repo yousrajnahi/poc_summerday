@@ -14,24 +14,28 @@ def create_2d_embeddings(embeddings):
     embeddings_2d = embedding_projector.fit_transform(embeddings, init="pca")
     return embeddings_2d
 
-def vectordb_to_dfdb(documents_projected, chunks, vectors,vector_ids):
-  # Create DataFrame
-  df = pd.DataFrame.from_dict(
-    [
-        {
-            "x": documents_projected[i, 0],
-            "y": documents_projected[i, 1],
-            "source": chunks[i]["source"].split("/")[-1],
-            "extract": chunks[i]['text'][:100] + "...",
-            "symbol": "circle",
-            "size_col": 4,  # Reduced size
-            'vector': vectors[i],
-            'id': vector_ids[i]
-        }
-        for i in range(len(chunks))
-    ]
-  )
-  return df
+def vectordb_to_dfdb(documents_projected, chunks, vectors, vector_ids, matching_docs=None):
+    df = pd.DataFrame.from_dict(
+        [
+            {
+                "x": documents_projected[i, 0],
+                "y": documents_projected[i, 1],
+                "source": chunks[i]["source"].split("/")[-1],
+                "extract": chunks[i]['text'][:100] + "...",
+                "size_col": 4,
+                "symbol": "circle",
+                'vector': vectors[i],
+                'id': vector_ids[i]
+            }
+            for i in range(len(chunks))
+        ]
+    )
+    
+    # Mark matching documents if provided
+    if matching_docs:
+        df.loc[df['source'].isin([doc.split("/")[-1] for doc in matching_docs]), 'symbol'] = 'star'
+    
+    return df
 
 def df_visualisation(df):
   # Generating a custom color map
