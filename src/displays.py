@@ -17,7 +17,7 @@ def create_2d_embeddings(embeddings):
     # Normalize the embeddings
     #scaler = MinMaxScaler(feature_range=(-1, 1))
     #embeddings_2d_normalized = scaler.fit_transform(embeddings_2d)
-    return embeddings
+    return embeddings_2d
 
 def vectordb_to_dfdb(documents_projected, chunks, vectors, vector_ids, matching_docs=None):
     source_matching_docs = []
@@ -55,7 +55,7 @@ def df_visualisation(df):
   # Ensure user query has a distinct color
   color_discrete_map["User query"] = "black"
   # Plot
-  fig = px.scatter(df, x="x", y="y", color="source", hover_data="extract", size="size_col", symbol="symbol", size_max=3, color_discrete_map=color_discrete_map, width=1000, height=700)
+  fig = px.scatter(df, x="x", y="y", color="source", size="size_col", symbol="symbol", size_max=3, color_discrete_map=color_discrete_map, width=1000, height=700)
   fig.update_traces(marker=dict(opacity=0.7,line=dict(width=0.5), sizemode='diameter'), selector=dict(mode="markers"))
   fig.update_layout(legend_title_text="<b>Chunk source</b>", title="<b>2D Projection of Chunk Embeddings via PaCMAP</b>")
   return fig
