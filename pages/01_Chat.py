@@ -4,7 +4,6 @@ from src.utils import initialize_vector_store, get_or_create_retrieval_chain
 import numpy as np 
 from sklearn.metrics.pairwise import cosine_similarity
 
-
 st.title("Chat")
 
 # Configure your environment
@@ -25,39 +24,57 @@ db, index, namespace, embeddings = initialize_vector_store()
 # Get or create retrieval chain
 retrieval_chain = get_or_create_retrieval_chain(selected_chain_type, selected_model, db)
 
-# Chat interface
+# Initialize session state for messages and sources
 if "messages" not in st.session_state:
     st.session_state.messages = []
+if "sources" not in st.session_state:
+    st.session_state.sources = []
 
+# Display chat messages
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
+# Display sources
+if st.session_state.sources:
+    st.markdown("### Sources:")
+    for source in st.session_state.sources:
+        st.markdown(source)
+
+# Chat input
 if prompt := st.chat_input("What is up?"):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
-
+    
     with st.chat_message("assistant"):
         if len(prompt.split()) > 500:
             st.warning(f"Your input is too long and will be truncated to fit the model's limit of 500 tokens.")
             prompt = ' '.join(prompt.split()[:500])
+        
         response = retrieval_chain.run(prompt)
         query_vector = embeddings.embed_query(prompt)
-        # Convert query_vector to 2D array
         query_vector_2d = np.array([query_vector], dtype=np.float32)
         matching_docs = db.as_retriever(search_type='mmr').get_relevant_documents(prompt)
         matching_docs_vectors = np.array([embeddings.embed_documents([doc.page_content])[0] for doc in matching_docs])
         scores = list(cosine_similarity(query_vector_2d, matching_docs_vectors)[0])
         sources = [doc.metadata.get("source", doc.metadata) for doc in matching_docs]
+        
         st.markdown(response)
-        st.markdown("### Sources:")
+        st.session_state.messages.append({"role": "assistant", "content": response})
+        
+        st.session_state.sources = []
         for source, score in zip(sources, scores):
             similarity_percentage = score * 100
-            st.markdown(f"- {source}: {similarity_percentage:.2f}%")
-    st.session_state.messages.append({"role": "assistant", "content": response})
+            source_text = f"- {source}: {similarity_percentage:.2f}%"
+            st.session_state.sources.append(source_text)
+        
+        st.markdown("### Sources:")
+        for source in st.session_state.sources:
+            st.markdown(source)
 
 # Sidebar Clear Chat Button
 if st.sidebar.button("Clear Chat"):
     st.session_state.messages.clear()
-
+    st.session_state.sources.clear()
+    st.experimental_rerun()
