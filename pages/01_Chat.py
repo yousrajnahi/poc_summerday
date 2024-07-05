@@ -24,22 +24,14 @@ db, index, namespace, embeddings = initialize_vector_store()
 # Get or create retrieval chain
 retrieval_chain = get_or_create_retrieval_chain(selected_chain_type, selected_model, db)
 
-# Initialize session state for messages and sources
+# Initialize session state for messages
 if "messages" not in st.session_state:
     st.session_state.messages = []
-if "sources" not in st.session_state:
-    st.session_state.sources = []
 
 # Display chat messages
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
-
-# Display sources
-if st.session_state.sources:
-    st.markdown("### Sources:")
-    for source in st.session_state.sources:
-        st.markdown(source)
 
 # Chat input
 if prompt := st.chat_input("What is up?"):
@@ -60,21 +52,16 @@ if prompt := st.chat_input("What is up?"):
         scores = list(cosine_similarity(query_vector_2d, matching_docs_vectors)[0])
         sources = [doc.metadata.get("source", doc.metadata) for doc in matching_docs]
         
-        st.markdown(response)
-        st.session_state.messages.append({"role": "assistant", "content": response})
-        
-        st.session_state.sources = []
+        # Merge response with sources
+        full_response = response + "\n\n### Sources:\n"
         for source, score in zip(sources, scores):
             similarity_percentage = score * 100
-            source_text = f"- {source}: {similarity_percentage:.2f}%"
-            st.session_state.sources.append(source_text)
+            full_response += f"- {source}: {similarity_percentage:.2f}%\n"
         
-        st.markdown("### Sources:")
-        for source in st.session_state.sources:
-            st.markdown(source)
+        st.markdown(full_response)
+        st.session_state.messages.append({"role": "assistant", "content": full_response})
 
 # Sidebar Clear Chat Button
 if st.sidebar.button("Clear Chat"):
     st.session_state.messages.clear()
-    st.session_state.sources.clear()
     st.experimental_rerun()
