@@ -2,7 +2,8 @@ import streamlit as st
 from src.utils import initialize_vector_store
 
 
-
+# Configuration de la page
+st.set_page_config(page_title="Home",page_icon="🏠",layout="wide",initial_sidebar_state="expanded",,layout="wide"  # Optionnel : pour une mise en page large)
 st.title("RAG - AI 4 CI")
 st.write("Welcome to our application. Use the sidebar to navigate between pages.")
 
