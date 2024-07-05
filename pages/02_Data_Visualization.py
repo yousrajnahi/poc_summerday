@@ -20,6 +20,11 @@ if st.sidebar.button("View Data"):
             vectors.append(st.session_state['last_query_vector'])
             vector_ids.append("id_user_query")
             
+        # Mark the matching documents if they exist
+        if 'source_matching_docs' in st.session_state:
+            for source in st.session_state['source_matching_docs']:
+                df.loc[df['source'] == source, 'symbol'] = 'star'
+            
 
 
         documents_projected = create_2d_embeddings(embeddings)
