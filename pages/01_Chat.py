@@ -64,4 +64,4 @@ if prompt := st.chat_input("What is up?"):
 # Sidebar Clear Chat Button
 if st.sidebar.button("Clear Chat"):
     st.session_state.messages.clear()
-    st.experimental_rerun()
+    st.rerun()
