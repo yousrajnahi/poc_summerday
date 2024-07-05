@@ -6,7 +6,7 @@ import os
 import shutil
 import matplotlib.pyplot as plt
 from sklearn.manifold import TSNE
-#from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler
 
 
 
@@ -16,9 +16,9 @@ def create_2d_embeddings(embeddings):
     tsne = TSNE(n_components=2, random_state=42, perplexity=30, n_iter=5000)
     embeddings_2d = tsne.fit_transform(embeddings)
     # Normalize the embeddings
-    #scaler = MinMaxScaler(feature_range=(-1, 1))
-    #embeddings_2d_normalized = scaler.fit_transform(embeddings_2d)
-    return embeddings_2d
+    scaler = MinMaxScaler(feature_range=(0, 1))
+    embeddings_2d_normalized = scaler.fit_transform(embeddings_2d)
+    return embeddings_2d_normalized
 
 def vectordb_to_dfdb(documents_projected, chunks, vectors, vector_ids, matching_docs=None):
     source_matching_docs = []
