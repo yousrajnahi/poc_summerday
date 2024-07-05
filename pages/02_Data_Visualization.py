@@ -15,7 +15,7 @@ if st.sidebar.button("View Data"):
         
         # Check if there's a last query to include
         if 'last_query' in st.session_state and 'last_query_vector' in st.session_state:
-            embeddings = np.append(embeddings, st.session_state['last_query_vector'])
+            embeddings = embeddings + [st.session_state['last_query_vector']]
             chunks.append({"source": "User query", "text": st.session_state['last_query']})
             vectors.append(st.session_state['last_query_vector'])
             vector_ids.append("id_user_query")
