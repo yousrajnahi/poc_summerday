@@ -5,7 +5,7 @@ import pandas as pd
 import os
 import shutil
 import matplotlib.pyplot as plt
-
+np.random.seed(42)
 
 
 # Function to create 2D embeddings
