@@ -14,6 +14,9 @@ os.environ['GROQ_API_KEY'] = st.secrets['GROQ_API_KEY']
 chain_types = ['stuff', "refine", "map_reduce", "map_rerank"]
 selected_chain_type = st.sidebar.selectbox("Choose a chain type:", options=chain_types)
 
+# Add search type selection and parameter inputs in the sidebar
+st.sidebar.markdown("### Model Parameters")
+
 model_options = ["gemma-7b-it", "mixtral-8x7b-32768", "llama3-70b-8192", "llama3-8b-8192"]
 default_model = "llama3-70b-8192"
 selected_model = st.sidebar.selectbox("Choose a model:", options=model_options, index=model_options.index(default_model))
