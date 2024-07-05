@@ -13,7 +13,6 @@ if st.sidebar.button("View Data"):
     with st.spinner("Fetching and processing data..."):
         embeddings, chunks, vectors, vector_ids = get_data_in_vector_store(index, namespace)
         
-        
         # Check if there's a last query to include
         if 'last_query' in st.session_state and 'last_query_vector' in st.session_state:
             embeddings = np.append(embeddings, [st.session_state['last_query_vector']], axis=0)
@@ -23,7 +22,8 @@ if st.sidebar.button("View Data"):
             
         documents_projected = create_2d_embeddings(embeddings)
         
-        matching_docs = st.session_state['matching_docs']
+        # Use get() method to safely access 'matching_docs' from session state
+        matching_docs = st.session_state.get('matching_docs', None)
         df = vectordb_to_dfdb(documents_projected, chunks, vectors, vector_ids, matching_docs)
         
         # Mark the user query point if it exists
