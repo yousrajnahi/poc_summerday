@@ -71,6 +71,7 @@ if prompt := st.chat_input("What is up?"):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
+        st.session_state['last_query'] = prompt
     
     with st.chat_message("assistant"):
         if len(prompt.split()) > 500:
@@ -80,6 +81,7 @@ if prompt := st.chat_input("What is up?"):
         response = retrieval_chain.run(prompt)
         query_vector = embeddings.embed_query(prompt)
         query_vector_2d = np.array([query_vector], dtype=np.float32)
+        st.session_state['last_query_vector'] = query_vector
         
         matching_docs = db.as_retriever(search_type=search_type, search_kwargs=search_kwargs).get_relevant_documents(prompt)
         
