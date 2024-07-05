@@ -11,7 +11,7 @@ np.random.seed(42)
 
 # Function to create 2D embeddings
 def create_2d_embeddings(embeddings):
-    tsne = TSNE(n_components=2, random_state=42, perplexity=30, n_iter=1000)
+    tsne = TSNE(n_components=2, random_state=42, perplexity=30, n_iter=5000)
     embeddings_2d = tsne.fit_transform(embeddings)
     return embeddings_2d
 
