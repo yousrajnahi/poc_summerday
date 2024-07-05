@@ -50,7 +50,7 @@ def vectordb_to_dfdb(documents_projected, chunks, vectors, vector_ids, matching_
 def df_visualisation(df):
  
   # Plot
-  fig = px.scatter(df, x="x", y="y", color="source", size="size_col", symbol="symbol", size_max=3, width=1000, height=700)
+  fig = px.scatter(df, x="x", y="y", color="source", size="size_col", symbol="symbol", size_max=3,color_discrete_sequence=px.colors.qualitative.Set1, width=1000, height=700)
   fig.update_traces(marker=dict(opacity=0.7,line=dict(width=0.5), sizemode='diameter'), selector=dict(mode="markers"))
   fig.update_layout(legend_title_text="<b>Chunk source</b>", title="<b>2D Projection of Chunk Embeddings via PaCMAP</b>")
   return fig
