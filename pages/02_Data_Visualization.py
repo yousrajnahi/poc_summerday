@@ -20,12 +20,6 @@ if st.sidebar.button("View Data"):
             vectors.append(st.session_state['last_query_vector'])
             vector_ids.append("id_user_query")
             
-        # Mark the matching documents if they exist
-        if 'source_matching_docs' in st.session_state:
-            for source in st.session_state['source_matching_docs']:
-                df.loc[df['source'] == source, 'symbol'] = 'star'
-            
-
 
         documents_projected = create_2d_embeddings(embeddings)
         print(len(documents_projected), len(chunks), len(vectors), len(vector_ids))
@@ -34,6 +28,11 @@ if st.sidebar.button("View Data"):
         if 'last_query' in st.session_state:
             df.loc[df['id'] == 'id_user_query', 'symbol'] = 'star'
             df.loc[df['id'] == 'id_user_query', 'size_col'] = 4  # Make user query point larger
+
+        # Mark the matching documents if they exist
+        if 'source_matching_docs' in st.session_state:
+            for source in st.session_state['source_matching_docs']:
+                df.loc[df['source'] == source, 'symbol'] = 'star'
         
     st.write("Data from Vector Store:")
     st.write(df)
