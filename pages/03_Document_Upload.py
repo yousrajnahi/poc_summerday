@@ -31,7 +31,7 @@ loader_cls_map = {
 loader_kwargs_map = {
     'csv': {"csv_args": {"delimiter": ",", "quotechar": '"'}},
     'json': {'jq_schema': '.[] | "MainTask: \(.MainTask), MainTaskSummary: \(.MainTaskSummary), Tips: \(.Tips)  "'},
-    'default': None}
+    'default': None
 }
 
 # Temporary directory for file processing
