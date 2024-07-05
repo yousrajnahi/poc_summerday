@@ -43,6 +43,7 @@ create_directory(directory)
 if uploaded_files:
     with st.spinner("Processing uploaded files..."):
         save_uploaded_files(uploaded_files, directory)
+        convert_files_in_directory(directory)
         extensions_dict = organize_files_by_extension(directory)
         for ext, files in extensions_dict.items():
             glob_pattern = f'**/*.{ext}'
