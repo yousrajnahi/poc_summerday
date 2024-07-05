@@ -43,15 +43,17 @@ def vectordb_to_dfdb(documents_projected, chunks, vectors, vector_ids, matching_
     return df
 
 def df_visualisation(df):
-  # Generating a custom color map
-  num_unique_sources = df['source'].nunique()
-  colors = plt.get_cmap('tab20')(np.linspace(0, 1, num_unique_sources))
-  color_discrete_map = {source: f'rgb({int(rgb[0]*255)}, {int(rgb[1]*255)}, {int(rgb[2]*255)})'
-                      for source, rgb in zip(df['source'].unique(), colors)}
-  # Ensure user query has a distinct color
-  color_discrete_map["User query"] = "black"
-  # Plot
-  fig = px.scatter(df, x="x", y="y", color="source", hover_data="extract", size="size_col", symbol="symbol", size_max=3, color_discrete_map=color_discrete_map, width=1000, height=700)
-  fig.update_traces(marker=dict(opacity=0.7,line=dict(width=0.5), sizemode='diameter'), selector=dict(mode="markers"))
-  fig.update_layout(legend_title_text="<b>Chunk source</b>", title="<b>2D Projection of Chunk Embeddings via PaCMAP</b>")
-  return fig
+    # Sort sources to ensure consistent order
+    sorted_sources = sorted(df['source'].unique())
+    num_unique_sources = len(sorted_sources)
+    colors = plt.get_cmap('tab20')(np.linspace(0, 1, num_unique_sources))
+    color_discrete_map = {source: f'rgb({int(rgb[0]*255)}, {int(rgb[1]*255)}, {int(rgb[2]*255)})'
+                          for source, rgb in zip(sorted_sources, colors)}
+    # Ensure user query has a distinct color
+    color_discrete_map["User query"] = "black"
+    
+    # Plot
+    fig = px.scatter(df, x="x", y="y", color="source", hover_data="extract", size="size_col", symbol="symbol", size_max=3, color_discrete_map=color_discrete_map, width=1000, height=700)
+    fig.update_traces(marker=dict(opacity=0.7,line=dict(width=0.5), sizemode='diameter'), selector=dict(mode="markers"))
+    fig.update_layout(legend_title_text="<b>Chunk source</b>", title="<b>2D Projection of Chunk Embeddings via t-SNE</b>")
+    return fig
