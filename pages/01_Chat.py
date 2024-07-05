@@ -3,6 +3,8 @@ import os
 from src.utils import initialize_vector_store, get_or_create_retrieval_chain
 import numpy as np 
 from sklearn.metrics.pairwise import cosine_similarity
+st.set_page_config(page_title="Chat",page_icon="🏠",layout="wide",initial_sidebar_state="expanded") # Optionnel : pour une mise en page large)
+
 
 st.title("Chat")
 
