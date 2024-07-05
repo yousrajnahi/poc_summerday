@@ -6,7 +6,7 @@ from langchain_community.document_loaders import (UnstructuredFileLoader, PDFMin
                                                   TextLoader, UnstructuredXMLLoader, UnstructuredHTMLLoader,
                                                   UnstructuredMarkdownLoader, UnstructuredEmailLoader)
 
-
+from langchain.text_splitter import RecursiveCharacterTextSplitter,Language
 st.title("Document Upload")
 
 # Initialize vector store
@@ -34,6 +34,18 @@ loader_kwargs_map = {
     'default': None
 }
 
+
+# Define a mapping from file extensions to loader classes
+text_splitter_map = {
+    'default': RecursiveCharacterTextSplitter(chunk_size=300,chunk_overlap=100,length_function=len,add_start_index=True),
+    'ipynb': RecursiveCharacterTextSplitter.from_language(Language.PYTHON,chunk_size=300,chunk_overlap=100,length_function=len,add_start_index=True) ,
+    'py': RecursiveCharacterTextSplitter.from_language(Language.PYTHON,chunk_size=300,chunk_overlap=100,length_function=len,add_start_index=True) ,
+    'md': RecursiveCharacterTextSplitter.from_language(Language.MARKDOWN,chunk_size=300,chunk_overlap=100,length_function=len,add_start_index=True) ,
+    'mdx': RecursiveCharacterTextSplitter.from_language(Language.MARKDOWN,chunk_size=300,chunk_overlap=100,length_function=len,add_start_index=True) ,
+    'html': RecursiveCharacterTextSplitter.from_language(Language.HTML,chunk_size=300,chunk_overlap=100,length_function=len,add_start_index=True) ,
+
+}
+
 # Temporary directory for file processing
 directory = "./Internal_data"
 create_directory(directory)
@@ -48,7 +60,8 @@ if uploaded_files:
             loader_class = loader_cls_map.get(ext, loader_cls_map['default'])
             loader_args = loader_kwargs_map.get(ext, loader_kwargs_map['default'])
             documents = load_documents(directory, glob_pattern, loader_class, loader_args)
-            chunks = split_documents(documents)
+            chunks = split_documents(documents,text_splitter_map,ext)
+          
             db.add_documents(chunks)
             st.toast(str(ext) + ' docs added successfully', icon="✅")
 
