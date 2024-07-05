@@ -41,4 +41,4 @@ opencv-python-headless
 jq
 pacmap
 plotly
-sklearn
+scikit-learn
