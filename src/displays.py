@@ -17,7 +17,7 @@ def create_2d_embeddings(embeddings):
     # Normalize the embeddings
     scaler = MinMaxScaler(feature_range=(-1, 1))
     embeddings_2d_normalized = scaler.fit_transform(embeddings_2d)
-    return embeddings_2d_normalize
+    return embeddings_2d_normalized
 
 def vectordb_to_dfdb(documents_projected, chunks, vectors, vector_ids, matching_docs=None):
     source_matching_docs = []
