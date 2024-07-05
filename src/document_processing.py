@@ -2,6 +2,9 @@ import nltk
 import os
 import tempfile
 import shutil
+import pandas as pd
+import subprocess
+
 try:
     nltk.data.find('tokenizers/punkt')
 except LookupError:
@@ -44,6 +47,27 @@ def organize_files_by_extension(source_directory):
     return organized_dict
 
 
+def convert_files_in_directory(data_directory):
+    # Browse all files in the directory
+    for file in os.listdir(data_directory):
+        # Full file path
+        file_path = os.path.join(data_directory, file)
+        # Check if the file is a regular file
+        if os.path.isfile(file_path):
+            # Get the file extension
+            extension = file.split(".")[-1].lower()
+            # Check if the extension is in the list for PDF conversion
+            if extension in ["epub", "rtf", "doc", "odt", "ppt", "docx", "pptx"]:
+                # Convert to PDF
+                subprocess.run(['libreoffice', '--convert-to', 'pdf:writer_pdf_Export', file_path, '--outdir', data_directory])
+                # Delete the old file
+                os.remove(file_path)
+            # Check if the extension is for Excel files
+            elif extension in ["xlsx", "xls"]:
+                # Convert to CSV
+                pd.read_excel(file_path).to_csv(os.path.join(data_directory, f"{os.path.splitext(file)[0]}.csv"), index=False)
+                # Delete the old file
+                os.remove(file_path)
 
 def load_documents(DATA_PATH, glob_pattern,loader_class, loader_args):
   # Create a DirectoryLoader instance with specified parameters.
