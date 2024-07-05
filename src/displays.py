@@ -7,12 +7,13 @@ import shutil
 import matplotlib.pyplot as plt
 from sklearn.manifold import TSNE
 #from sklearn.preprocessing import MinMaxScaler
-np.random.seed(123)
+
 
 
 def create_2d_embeddings(embeddings):
     # Perform t-SNE
-    tsne = TSNE(n_components=2, random_state=123)
+    np.random.seed(42)
+    tsne = TSNE(n_components=2, random_state=42)
     embeddings_2d = tsne.fit_transform(embeddings)
     # Normalize the embeddings
     #scaler = MinMaxScaler(feature_range=(-1, 1))
