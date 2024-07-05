@@ -6,12 +6,16 @@ import os
 import shutil
 import matplotlib.pyplot as plt
 from sklearn.manifold import TSNE
+from sklearn.decomposition import PCA
 
 
 # Function to create 2D embeddings
 def create_2d_embeddings(embeddings):
+    pca = PCA(n_components=50, random_state=42)
+    embeddings_pca = pca.fit_transform(embeddings)
+    
     tsne = TSNE(n_components=2, random_state=42, perplexity=30, n_iter=5000, learning_rate='auto', init='pca')
-    embeddings_2d = tsne.fit_transform(embeddings)
+    embeddings_2d = tsne.fit_transform(embeddings_pca)
     return embeddings_2d
 
 def vectordb_to_dfdb(documents_projected, chunks, vectors, vector_ids, matching_docs=None):
