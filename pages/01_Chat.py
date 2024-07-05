@@ -23,6 +23,8 @@ selected_model = st.sidebar.selectbox("Choose a model:", options=model_options, 
 
 # Add temperature slider
 temperature = st.sidebar.slider("Temperature", min_value=0.0, max_value=1.0, value=0.0, step=0.1)
+# Add a divider
+st.sidebar.divider()
 
 # Add search type selection and parameter inputs in the sidebar
 st.sidebar.markdown("### Retriever Parameters")
