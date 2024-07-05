@@ -47,7 +47,7 @@ if prompt := st.chat_input("What is up?"):
         response = retrieval_chain.run(prompt)
         query_vector = embeddings.embed_query(prompt)
         query_vector_2d = np.array([query_vector], dtype=np.float32)
-        matching_docs = db.as_retriever(search_type='mmr').get_relevant_documents(prompt)
+        matching_docs = db.as_retriever(search_type='mmr',search_kwargs={'k': 6, 'lambda_mult': 0.25}).get_relevant_documents(prompt)
         matching_docs_vectors = np.array([embeddings.embed_documents([doc.page_content])[0] for doc in matching_docs])
         scores = list(cosine_similarity(query_vector_2d, matching_docs_vectors)[0])
         sources = [doc.metadata.get("source", doc.metadata) for doc in matching_docs]
