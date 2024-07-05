@@ -1,7 +1,7 @@
 import streamlit as st
 from src.utils import initialize_vector_store
 from src.document_processing import (create_directory, save_uploaded_files, organize_files_by_extension,
-                                     load_documents, split_documents, remove_directory)
+                                     load_documents, split_documents, remove_directory, convert_files_in_directory)
 from langchain_community.document_loaders import (UnstructuredFileLoader, PDFMinerLoader, CSVLoader, JSONLoader,
                                                   TextLoader, UnstructuredXMLLoader, UnstructuredHTMLLoader,
                                                   UnstructuredMarkdownLoader, UnstructuredEmailLoader)
