@@ -14,8 +14,9 @@ os.environ['GROQ_API_KEY'] = st.secrets['GROQ_API_KEY']
 st.sidebar.markdown("### Prompt Parameters")
 
 # Sidebar for model and chain type selection
-chain_types = ['stuff', "refine", "map_reduce", "map_rerank"]
-selected_chain_type = st.sidebar.selectbox("Choose a chain type:", options=chain_types)
+chain_types = ['stuff', "refine", "map_reduce", "map_rerank"]*
+default_chain_type = 'stuff'
+selected_chain_type = st.sidebar.selectbox("Choose a chain type:", options=chain_types, index = chain_types.index(default_chain_type))
 
 # Add a divider
 st.sidebar.divider()
@@ -33,8 +34,12 @@ st.sidebar.divider()
 
 # Add search type selection and parameter inputs in the sidebar
 st.sidebar.markdown("### Retriever Parameters")
-search_type = st.sidebar.selectbox("Choose a search type:", ['similarity', 'similarity_score_threshold', 'mmr'])
-k_value = st.sidebar.slider("Number of documents to retrieve (k)", min_value=1, max_value=20, value=6)
+
+search_types = ['similarity', 'similarity_score_threshold', 'mmr']
+default_search_type = 'mmr'
+search_type = st.sidebar.selectbox("Choose a search type:", options = search_types, index= search_types.index(default_search_type))
+default_k = 4
+k_value = st.sidebar.slider("Number of documents to retrieve (k)", min_value=1, max_value=20, value= default_k)
 
 # Define search_kwargs based on the selected search type
 search_kwargs = {'k': k_value}
