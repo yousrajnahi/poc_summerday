@@ -32,7 +32,7 @@ if st.sidebar.button("View Data"):
         # Mark the matching documents if they exist
         if 'source_matching_docs' in st.session_state:
             for source in st.session_state['source_matching_docs']:
-                df.loc[df['source'] == source, 'symbol'] = 'star'
+                df.loc[df['source'] == source.split("/")[-1], 'symbol'] = 'star'
         
     st.write("Data from Vector Store:")
     st.write(df)
