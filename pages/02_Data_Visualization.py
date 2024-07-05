@@ -28,7 +28,7 @@ if st.sidebar.button("View Data"):
         # Mark the user query point if it exists
         if 'last_query' in st.session_state:
             df.loc[df['id'] == 'id_user_query', 'symbol'] = 'star'
-            df.loc[df['id'] == 'id_user_query', 'size_col'] = 10  # Make user query point larger
+            df.loc[df['id'] == 'id_user_query', 'size_col'] = 4  # Make user query point larger
         
     st.write("Data from Vector Store:")
     st.write(df)
