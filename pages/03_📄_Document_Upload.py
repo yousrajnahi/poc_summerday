@@ -8,12 +8,19 @@ from langchain_community.document_loaders import (UnstructuredFileLoader, PDFMin
 
 from langchain.text_splitter import RecursiveCharacterTextSplitter,Language
 st.set_page_config(page_title="Document Upload",page_icon="📊",layout="wide",initial_sidebar_state="expanded") 
+# Add sidebar
+st.sidebar.title("Upload Options")
+
+upload_type = st.sidebar.radio(
+    "Choose upload type:",
+    ("File Upload", "Wikipedia", "YouTube", "arXiv")
+)
+
 st.title("Document Upload")
 
 # Initialize vector store
 db, index, namespace, embeddings = initialize_vector_store()
-# File uploader
-uploaded_files = st.file_uploader("Upload Documents", accept_multiple_files=True)
+
 # Loader mappings
 loader_cls_map = {
     'md': UnstructuredMarkdownLoader,
@@ -43,58 +50,60 @@ text_splitter_map = {
 # Temporary directory for file processing
 directory = "./Internal_data"
 create_directory(directory)
-if uploaded_files:
-    with st.spinner("Processing uploaded files..."):
-        save_uploaded_files(uploaded_files, directory)
-        convert_files_in_directory(directory)
-        extensions_dict = organize_files_by_extension(directory)
-        for ext, files in extensions_dict.items():
-            glob_pattern = f'**/*.{ext}'
-            loader_class = loader_cls_map.get(ext, loader_cls_map['default'])
-            loader_args = loader_kwargs_map.get(ext, loader_kwargs_map['default'])
-            documents = load_documents(directory, glob_pattern, loader_class, loader_args)
-            chunks = split_documents(documents,text_splitter_map,ext)
-          
-            db.add_documents(chunks)
-            st.toast(str(ext) + ' docs added successfully', icon="✅")
-    # Clean up
-    remove_directory(directory)
-    st.success("All documents processed and added to the vector store.")
-  
-# Ajout de la partie Wikipedia
-wikipedia_query = st.text_input("Enter a Wikipedia query (optional):")
-if wikipedia_query:
-    with st.spinner("Loading Wikipedia content..."):
-        loader = WikipediaLoader(query=wikipedia_query, load_max_docs=2, load_all_available_meta=False, lang='en')
-        wikipedia_documents = loader.load()
-        
-        # Utiliser le même text splitter que pour les autres documents
-        wikipedia_chunks = split_documents(wikipedia_documents, text_splitter_map, 'default')
-        
-        db.add_documents(wikipedia_chunks)
-        st.success(f"Wikipedia content for '{wikipedia_query}' added to the vector store.")
-  # New YouTube part
-youtube_url = st.text_input("Enter a YouTube video URL (optional):")
-if youtube_url:
-    with st.spinner("Loading YouTube content..."):
-        loader = YoutubeLoader.from_youtube_url(youtube_url, add_video_info=False, language='en')
-        youtube_documents = loader.load()
-        
-        # Use the same text splitter as for other documents
-        youtube_chunks = split_documents(youtube_documents, text_splitter_map, 'default')
-        
-        db.add_documents(youtube_chunks)
-        st.success(f"YouTube content from '{youtube_url}' added to the vector store.")
 
-# New arXiv part
-arxiv_query = st.text_input("Enter an arXiv query (optional):")
-if arxiv_query:
-    with st.spinner("Loading arXiv content..."):
-        loader = ArxivLoader(query=arxiv_query, load_all_available_meta=False, load_max_docs=2)
-        arxiv_documents = loader.load()
-        
-        # Use the same text splitter as for other documents
-        arxiv_chunks = split_documents(arxiv_documents, text_splitter_map, 'default')
-        
-        db.add_documents(arxiv_chunks)
-        st.success(f"arXiv content for '{arxiv_query}' added to the vector store.")
+# Main content based on selected upload type
+if upload_type == "File Upload":
+  uploaded_files = st.file_uploader("Upload Documents", accept_multiple_files=True)
+  if uploaded_files:
+      with st.spinner("Processing uploaded files..."):
+          save_uploaded_files(uploaded_files, directory)
+          convert_files_in_directory(directory)
+          extensions_dict = organize_files_by_extension(directory)
+          for ext, files in extensions_dict.items():
+              glob_pattern = f'**/*.{ext}'
+              loader_class = loader_cls_map.get(ext, loader_cls_map['default'])
+              loader_args = loader_kwargs_map.get(ext, loader_kwargs_map['default'])
+              documents = load_documents(directory, glob_pattern, loader_class, loader_args)
+              chunks = split_documents(documents,text_splitter_map,ext)
+            
+              db.add_documents(chunks)
+              st.toast(str(ext) + ' docs added successfully', icon="✅")
+      # Clean up
+      remove_directory(directory)
+      st.success("All documents processed and added to the vector store.")
+elif upload_type == "Wikipedia":  
+  wikipedia_query = st.text_input("Enter a Wikipedia query (optional):")
+  if wikipedia_query:
+      with st.spinner("Loading Wikipedia content..."):
+          loader = WikipediaLoader(query=wikipedia_query, load_max_docs=2, load_all_available_meta=False, lang='en')
+          wikipedia_documents = loader.load()
+          
+          # Utiliser le même text splitter que pour les autres documents
+          wikipedia_chunks = split_documents(wikipedia_documents, text_splitter_map, 'default')
+          
+          db.add_documents(wikipedia_chunks)
+          st.success(f"Wikipedia content for '{wikipedia_query}' added to the vector store.")
+elif upload_type == "YouTube":
+  youtube_url = st.text_input("Enter a YouTube video URL (optional):")
+  if youtube_url:
+      with st.spinner("Loading YouTube content..."):
+          loader = YoutubeLoader.from_youtube_url(youtube_url, add_video_info=False, language='en')
+          youtube_documents = loader.load()
+          
+          # Use the same text splitter as for other documents
+          youtube_chunks = split_documents(youtube_documents, text_splitter_map, 'default')
+          
+          db.add_documents(youtube_chunks)
+          st.success(f"YouTube content from '{youtube_url}' added to the vector store.")
+elif upload_type == "arXiv":
+  arxiv_query = st.text_input("Enter an arXiv query (optional):")
+  if arxiv_query:
+      with st.spinner("Loading arXiv content..."):
+          loader = ArxivLoader(query=arxiv_query, load_all_available_meta=False, load_max_docs=2)
+          arxiv_documents = loader.load()
+          
+          # Use the same text splitter as for other documents
+          arxiv_chunks = split_documents(arxiv_documents, text_splitter_map, 'default')
+          
+          db.add_documents(arxiv_chunks)
+          st.success(f"arXiv content for '{arxiv_query}' added to the vector store.")
