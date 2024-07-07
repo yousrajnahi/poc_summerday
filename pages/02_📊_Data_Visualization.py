@@ -5,6 +5,7 @@ from src.displays import vectordb_to_dfdb, df_visualisation, create_2d_embedding
 import numpy as np
 np.random.seed(42)
 
+st.set_page_config(page_title="Data Visualization",page_icon="📊",layout="wide",initial_sidebar_state="expanded") 
 st.title("Data Visualization")
 
 # Initialize vector store
