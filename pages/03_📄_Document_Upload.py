@@ -73,3 +73,28 @@ if wikipedia_query:
         
         db.add_documents(wikipedia_chunks)
         st.success(f"Wikipedia content for '{wikipedia_query}' added to the vector store.")
+  # New YouTube part
+youtube_url = st.text_input("Enter a YouTube video URL (optional):")
+if youtube_url:
+    with st.spinner("Loading YouTube content..."):
+        loader = YoutubeLoader.from_youtube_url(youtube_url, add_video_info=False, language='en')
+        youtube_documents = loader.load()
+        
+        # Use the same text splitter as for other documents
+        youtube_chunks = split_documents(youtube_documents, text_splitter_map, 'default')
+        
+        db.add_documents(youtube_chunks)
+        st.success(f"YouTube content from '{youtube_url}' added to the vector store.")
+
+# New arXiv part
+arxiv_query = st.text_input("Enter an arXiv query (optional):")
+if arxiv_query:
+    with st.spinner("Loading arXiv content..."):
+        loader = ArxivLoader(query=arxiv_query, load_all_available_meta=False, load_max_docs=2)
+        arxiv_documents = loader.load()
+        
+        # Use the same text splitter as for other documents
+        arxiv_chunks = split_documents(arxiv_documents, text_splitter_map, 'default')
+        
+        db.add_documents(arxiv_chunks)
+        st.success(f"arXiv content for '{arxiv_query}' added to the vector store.")
