@@ -11,6 +11,11 @@ st.title("Data Visualization")
 # Initialize vector store
 db, index, namespace, embeddings = initialize_vector_store()
 
+if st.sidebar.button("Clear"):
+    if 'data_viz_df' in st.session_state:
+        del st.session_state['data_viz_df']
+    st.rerun()
+    
 if st.sidebar.button("View Data") or 'data_viz_df' in st.session_state:
     if 'data_viz_df' not in st.session_state:
         with st.spinner("Fetching and processing data..."):
@@ -43,10 +48,7 @@ if st.sidebar.button("View Data") or 'data_viz_df' in st.session_state:
     
     st.plotly_chart(fig)
 
-if st.sidebar.button("Clear Visualization"):
-    if 'data_viz_df' in st.session_state:
-        del st.session_state['data_viz_df']
-    st.rerun()
+
 
 if 'last_query' in st.session_state:
     st.sidebar.write(f"Last query: {st.session_state['last_query']}")
