@@ -13,8 +13,9 @@ st.title("Document Upload")
 # Initialize vector store
 db, index, namespace, embeddings = initialize_vector_store()
 
-# File uploader
-uploaded_files = st.file_uploader("Upload Documents", accept_multiple_files=True)
+if st.sidebar.button("Uploade internal files"):
+  # File uploader
+  uploaded_files = st.file_uploader("Upload Documents", accept_multiple_files=True)
 
 # Loader mappings
 loader_cls_map = {
