@@ -54,7 +54,7 @@ create_directory(directory)
 # Main content based on selected upload type
 if upload_type == "File Upload":
   uploaded_files = st.file_uploader("Upload Documents", accept_multiple_files=True)
-  if st.button("Load Files Content"):
+  if st.sidebar.button("Load Files Content"):
       with st.spinner("Processing uploaded files..."):
           save_uploaded_files(uploaded_files, directory)
           convert_files_in_directory(directory)
@@ -73,8 +73,8 @@ if upload_type == "File Upload":
       st.success("All documents processed and added to the vector store.")
 elif upload_type == "Wikipedia":
     wikipedia_query = st.text_input("Enter a Wikipedia query:")
-    load_max_docs = st.number_input("Maximum number of documents to load:", min_value=1, value=2)
-    lang = st.selectbox("Select language:", ["en", "fr", "es", "de", "it", "pt"])
+    load_max_docs = st.sidebar.number_input("Maximum number of documents to load:", min_value=1, value=2)
+    lang = st.sidebar.selectbox("Select language:", ["en", "fr", "es", "de", "it", "pt"])
     
     if st.button("Load Wikipedia Content"):
         with st.spinner("Loading Wikipedia content..."):
@@ -86,8 +86,8 @@ elif upload_type == "Wikipedia":
 
 elif upload_type == "YouTube":
     youtube_url = st.text_input("Enter a YouTube video URL:")
-    add_video_info = st.checkbox("Add video info to documents")
-    language = st.selectbox("Select language:", ["en", "fr", "es", "de", "it", "pt"])
+    add_video_info = st.sidebar.checkbox("Add video info to documents")
+    language = st.sidebar.selectbox("Select language:", ["en", "fr", "es", "de", "it", "pt"])
     
     if st.button("Load YouTube Content"):
         with st.spinner("Loading YouTube content..."):
@@ -99,8 +99,8 @@ elif upload_type == "YouTube":
 
 elif upload_type == "arXiv":
     arxiv_query = st.text_input("Enter an arXiv query:")
-    load_max_docs = st.number_input("Maximum number of documents to load:", min_value=1, value=2)
-    load_all_available_meta = st.checkbox("Load all available metadata")
+    load_max_docs = st.sidebar.number_input("Maximum number of documents to load:", min_value=1, value=2)
+    load_all_available_meta = st.sidebar.checkbox("Load all available metadata")
     
     if st.button("Load arXiv Content"):
         with st.spinner("Loading arXiv content..."):
