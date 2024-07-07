@@ -43,3 +43,7 @@ jq
 pacmap
 plotly
 scikit-learn
+youtube-transcript-api
+pytube
+arxiv
+pymupdf
