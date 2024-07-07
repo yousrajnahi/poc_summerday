@@ -54,7 +54,7 @@ create_directory(directory)
 # Main content based on selected upload type
 if upload_type == "File Upload":
   uploaded_files = st.file_uploader("Upload Documents", accept_multiple_files=True)
-  if st.sidebar.button("Load Files Content"):
+  if uploaded_files and st.button("Load Files Content"):
       with st.spinner("Processing uploaded files..."):
           save_uploaded_files(uploaded_files, directory)
           convert_files_in_directory(directory)
@@ -74,11 +74,12 @@ if upload_type == "File Upload":
 elif upload_type == "Wikipedia":
     wikipedia_query = st.text_input("Enter a Wikipedia query:")
     load_max_docs = st.sidebar.number_input("Maximum number of documents to load:", min_value=1, value=2)
-    lang = st.sidebar.selectbox("Select language:", ["en", "fr", "es", "de", "it", "pt"])
+    lang = st.sidebar.selectbox("Select language:", ["en", "fr"])
+    load_all_available_meta = st.sidebar.checkbox("Load all available metadata")
     
-    if st.button("Load Wikipedia Content"):
+    if wikipedia_query and st.button("Load Wikipedia Content"):
         with st.spinner("Loading Wikipedia content..."):
-            loader = WikipediaLoader(query=wikipedia_query, load_max_docs=load_max_docs, load_all_available_meta=False, lang=lang)
+            loader = WikipediaLoader(query=wikipedia_query, load_max_docs=load_max_docs, load_all_available_meta=load_all_available_meta, lang=lang)
             wikipedia_documents = loader.load()
             wikipedia_chunks = split_documents(wikipedia_documents, text_splitter_map, 'default')
             db.add_documents(wikipedia_chunks)
@@ -89,7 +90,7 @@ elif upload_type == "YouTube":
     add_video_info = st.sidebar.checkbox("Add video info to documents")
     language = st.sidebar.selectbox("Select language:", ["en", "fr", "es", "de", "it", "pt"])
     
-    if st.button("Load YouTube Content"):
+    if youtube_url and st.button("Load YouTube Content"):
         with st.spinner("Loading YouTube content..."):
             loader = YoutubeLoader.from_youtube_url(youtube_url, add_video_info=add_video_info, language=language)
             youtube_documents = loader.load()
@@ -102,7 +103,7 @@ elif upload_type == "arXiv":
     load_max_docs = st.sidebar.number_input("Maximum number of documents to load:", min_value=1, value=2)
     load_all_available_meta = st.sidebar.checkbox("Load all available metadata")
     
-    if st.button("Load arXiv Content"):
+    if arxiv_query and st.button("Load arXiv Content"):
         with st.spinner("Loading arXiv content..."):
             loader = ArxivLoader(query=arxiv_query, load_all_available_meta=load_all_available_meta, load_max_docs=load_max_docs)
             arxiv_documents = loader.load()
