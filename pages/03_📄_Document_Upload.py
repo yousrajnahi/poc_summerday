@@ -4,7 +4,7 @@ from src.document_processing import (create_directory, save_uploaded_files, orga
                                      load_documents, split_documents, remove_directory, convert_files_in_directory)
 from langchain_community.document_loaders import (UnstructuredFileLoader, PDFMinerLoader, CSVLoader, JSONLoader,
                                                   TextLoader, UnstructuredXMLLoader, UnstructuredHTMLLoader,
-                                                  UnstructuredMarkdownLoader, UnstructuredEmailLoader, WikipediaLoader)
+                                                  UnstructuredMarkdownLoader, UnstructuredEmailLoader, WikipediaLoader, ArxivLoader, YoutubeLoader)
 
 from langchain.text_splitter import RecursiveCharacterTextSplitter,Language
 st.set_page_config(page_title="Document Upload",page_icon="📊",layout="wide",initial_sidebar_state="expanded") 
