@@ -7,6 +7,7 @@ from langchain_community.document_loaders import (UnstructuredFileLoader, PDFMin
                                                   UnstructuredMarkdownLoader, UnstructuredEmailLoader)
 
 from langchain.text_splitter import RecursiveCharacterTextSplitter,Language
+st.set_page_config(page_title="Document Upload",page_icon="📊",layout="wide",initial_sidebar_state="expanded") 
 st.title("Document Upload")
 
 # Initialize vector store
