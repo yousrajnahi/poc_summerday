@@ -60,3 +60,16 @@ if uploaded_files:
     # Clean up
     remove_directory(directory)
     st.success("All documents processed and added to the vector store.")
+  
+# Ajout de la partie Wikipedia
+wikipedia_query = st.text_input("Enter a Wikipedia query (optional):")
+if wikipedia_query:
+    with st.spinner("Loading Wikipedia content..."):
+        loader = WikipediaLoader(query=wikipedia_query, load_max_docs=2, load_all_available_meta=False, lang='en')
+        wikipedia_documents = loader.load()
+        
+        # Utiliser le même text splitter que pour les autres documents
+        wikipedia_chunks = split_documents(wikipedia_documents, text_splitter_map, 'default')
+        
+        db.add_documents(wikipedia_chunks)
+        st.success(f"Wikipedia content for '{wikipedia_query}' added to the vector store.")
