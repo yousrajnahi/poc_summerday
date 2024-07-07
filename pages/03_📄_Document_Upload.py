@@ -54,7 +54,7 @@ create_directory(directory)
 # Main content based on selected upload type
 if upload_type == "File Upload":
   uploaded_files = st.file_uploader("Upload Documents", accept_multiple_files=True)
-  if st.button("Load Files Content")::
+  if st.button("Load Files Content"):
       with st.spinner("Processing uploaded files..."):
           save_uploaded_files(uploaded_files, directory)
           convert_files_in_directory(directory)
