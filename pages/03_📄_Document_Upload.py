@@ -71,39 +71,41 @@ if upload_type == "File Upload":
       # Clean up
       remove_directory(directory)
       st.success("All documents processed and added to the vector store.")
-elif upload_type == "Wikipedia":  
-  wikipedia_query = st.text_input("Enter a Wikipedia query (optional):")
-  if wikipedia_query:
-      with st.spinner("Loading Wikipedia content..."):
-          loader = WikipediaLoader(query=wikipedia_query, load_max_docs=2, load_all_available_meta=False, lang='en')
-          wikipedia_documents = loader.load()
-          
-          # Utiliser le même text splitter que pour les autres documents
-          wikipedia_chunks = split_documents(wikipedia_documents, text_splitter_map, 'default')
-          
-          db.add_documents(wikipedia_chunks)
-          st.success(f"Wikipedia content for '{wikipedia_query}' added to the vector store.")
+elif upload_type == "Wikipedia":
+    wikipedia_query = st.text_input("Enter a Wikipedia query:")
+    load_max_docs = st.number_input("Maximum number of documents to load:", min_value=1, value=2)
+    lang = st.selectbox("Select language:", ["en", "fr", "es", "de", "it", "pt"])
+    
+    if st.button("Load Wikipedia Content"):
+        with st.spinner("Loading Wikipedia content..."):
+            loader = WikipediaLoader(query=wikipedia_query, load_max_docs=load_max_docs, load_all_available_meta=False, lang=lang)
+            wikipedia_documents = loader.load()
+            wikipedia_chunks = split_documents(wikipedia_documents, text_splitter_map, 'default')
+            db.add_documents(wikipedia_chunks)
+            st.success(f"Wikipedia content for '{wikipedia_query}' added to the vector store.")
+
 elif upload_type == "YouTube":
-  youtube_url = st.text_input("Enter a YouTube video URL (optional):")
-  if youtube_url:
-      with st.spinner("Loading YouTube content..."):
-          loader = YoutubeLoader.from_youtube_url(youtube_url, add_video_info=False, language='en')
-          youtube_documents = loader.load()
-          
-          # Use the same text splitter as for other documents
-          youtube_chunks = split_documents(youtube_documents, text_splitter_map, 'default')
-          
-          db.add_documents(youtube_chunks)
-          st.success(f"YouTube content from '{youtube_url}' added to the vector store.")
+    youtube_url = st.text_input("Enter a YouTube video URL:")
+    add_video_info = st.checkbox("Add video info to documents")
+    language = st.selectbox("Select language:", ["en", "fr", "es", "de", "it", "pt"])
+    
+    if st.button("Load YouTube Content"):
+        with st.spinner("Loading YouTube content..."):
+            loader = YoutubeLoader.from_youtube_url(youtube_url, add_video_info=add_video_info, language=language)
+            youtube_documents = loader.load()
+            youtube_chunks = split_documents(youtube_documents, text_splitter_map, 'default')
+            db.add_documents(youtube_chunks)
+            st.success(f"YouTube content from '{youtube_url}' added to the vector store.")
+
 elif upload_type == "arXiv":
-  arxiv_query = st.text_input("Enter an arXiv query (optional):")
-  if arxiv_query:
-      with st.spinner("Loading arXiv content..."):
-          loader = ArxivLoader(query=arxiv_query, load_all_available_meta=False, load_max_docs=2)
-          arxiv_documents = loader.load()
-          
-          # Use the same text splitter as for other documents
-          arxiv_chunks = split_documents(arxiv_documents, text_splitter_map, 'default')
-          
-          db.add_documents(arxiv_chunks)
-          st.success(f"arXiv content for '{arxiv_query}' added to the vector store.")
+    arxiv_query = st.text_input("Enter an arXiv query:")
+    load_max_docs = st.number_input("Maximum number of documents to load:", min_value=1, value=2)
+    load_all_available_meta = st.checkbox("Load all available metadata")
+    
+    if st.button("Load arXiv Content"):
+        with st.spinner("Loading arXiv content..."):
+            loader = ArxivLoader(query=arxiv_query, load_all_available_meta=load_all_available_meta, load_max_docs=load_max_docs)
+            arxiv_documents = loader.load()
+            arxiv_chunks = split_documents(arxiv_documents, text_splitter_map, 'default')
+            db.add_documents(arxiv_chunks)
+            st.success(f"arXiv content for '{arxiv_query}' added to the vector store.")
