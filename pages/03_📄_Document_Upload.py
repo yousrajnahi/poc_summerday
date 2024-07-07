@@ -12,8 +12,8 @@ st.title("Document Upload")
 
 # Initialize vector store
 db, index, namespace, embeddings = initialize_vector_store()
-
-
+# File uploader
+uploaded_files = st.file_uploader("Upload Documents", accept_multiple_files=True)
 # Loader mappings
 loader_cls_map = {
     'md': UnstructuredMarkdownLoader,
@@ -26,14 +26,11 @@ loader_cls_map = {
     'json': JSONLoader,
     'default': UnstructuredFileLoader
 }
-
 loader_kwargs_map = {
     'csv': {"csv_args": {"delimiter": ",", "quotechar": '"'}},
     'json': {'jq_schema': '.[] | "MainTask: \(.MainTask), MainTaskSummary: \(.MainTaskSummary), Tips: \(.Tips)  "'},
     'default': None
 }
-
-
 # Define a mapping from file extensions to loader classes
 text_splitter_map = {
     'default': RecursiveCharacterTextSplitter(chunk_size=300,chunk_overlap=100,length_function=len,add_start_index=True),
@@ -42,32 +39,24 @@ text_splitter_map = {
     'md': RecursiveCharacterTextSplitter.from_language(Language.MARKDOWN,chunk_size=300,chunk_overlap=100,length_function=len,add_start_index=True) ,
     'mdx': RecursiveCharacterTextSplitter.from_language(Language.MARKDOWN,chunk_size=300,chunk_overlap=100,length_function=len,add_start_index=True) ,
     'html': RecursiveCharacterTextSplitter.from_language(Language.HTML,chunk_size=300,chunk_overlap=100,length_function=len,add_start_index=True) ,
-
 }
-
-
-if st.sidebar.button("Uploade internal files"):
-  # File uploader
-  uploaded_files = st.file_uploader("Upload Documents", accept_multiple_files=True)
-  # Temporary directory for file processing
-  directory = "./Internal_data"
-  create_directory(directory)
-  if uploaded_files:
-      with st.spinner("Processing uploaded files..."):
-          save_uploaded_files(uploaded_files, directory)
-          convert_files_in_directory(directory)
-          extensions_dict = organize_files_by_extension(directory)
-          for ext, files in extensions_dict.items():
-              glob_pattern = f'**/*.{ext}'
-              loader_class = loader_cls_map.get(ext, loader_cls_map['default'])
-              loader_args = loader_kwargs_map.get(ext, loader_kwargs_map['default'])
-              documents = load_documents(directory, glob_pattern, loader_class, loader_args)
-              chunks = split_documents(documents,text_splitter_map,ext)
-            
-              db.add_documents(chunks)
-              st.toast(str(ext) + ' docs added successfully', icon="✅")
-  
-      # Clean up
-      remove_directory(directory)
-      st.success("All documents processed and added to the vector store.")
-
+# Temporary directory for file processing
+directory = "./Internal_data"
+create_directory(directory)
+if uploaded_files:
+    with st.spinner("Processing uploaded files..."):
+        save_uploaded_files(uploaded_files, directory)
+        convert_files_in_directory(directory)
+        extensions_dict = organize_files_by_extension(directory)
+        for ext, files in extensions_dict.items():
+            glob_pattern = f'**/*.{ext}'
+            loader_class = loader_cls_map.get(ext, loader_cls_map['default'])
+            loader_args = loader_kwargs_map.get(ext, loader_kwargs_map['default'])
+            documents = load_documents(directory, glob_pattern, loader_class, loader_args)
+            chunks = split_documents(documents,text_splitter_map,ext)
+          
+            db.add_documents(chunks)
+            st.toast(str(ext) + ' docs added successfully', icon="✅")
+    # Clean up
+    remove_directory(directory)
+    st.success("All documents processed and added to the vector store.")
