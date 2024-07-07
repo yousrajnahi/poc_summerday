@@ -16,7 +16,8 @@ os.environ['GROQ_API_KEY'] = st.secrets['GROQ_API_KEY']
 if st.sidebar.button("Clear Chat"):
     st.session_state.messages.clear()
     st.rerun()
-
+    
+st.sidebar.title("Chat Options")
 st.sidebar.markdown("### Prompt Parameters")
 
 # Sidebar for model and chain type selection
