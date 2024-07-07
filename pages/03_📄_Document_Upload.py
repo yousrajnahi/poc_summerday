@@ -87,8 +87,8 @@ elif upload_type == "Wikipedia":
 
 elif upload_type == "YouTube":
     youtube_url = st.text_input("Enter a YouTube video URL:")
+    language = st.sidebar.selectbox("Select language:", ["en", "fr"])
     add_video_info = st.sidebar.checkbox("Add video info to documents")
-    language = st.sidebar.selectbox("Select language:", ["en", "fr", "es", "de", "it", "pt"])
     
     if youtube_url and st.button("Load YouTube Content"):
         with st.spinner("Loading YouTube content..."):
