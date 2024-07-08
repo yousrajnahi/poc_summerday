@@ -63,4 +63,4 @@ def df_visualisation(df):
 
 # Extract file extensions
 def get_file_extension(filename):
-    return filename.split('.')[-1] if filename else 'query'
+    return filename.split('.')[-1] if filename else ''
