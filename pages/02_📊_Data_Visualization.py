@@ -41,12 +41,13 @@ if st.sidebar.button("View Data") or 'data_viz_df' in st.session_state:
     else:
         df = st.session_state['data_viz_df']
 
-    st.write("Data from Vector Store:")
+    st.subheader("Data from Vector Store")
     st.write(df)
     
     with st.spinner("Generating visualization..."):
         fig = df_visualisation(df)
-    
+        
+    st.subheader("2D projection of Data")
     st.plotly_chart(fig)
     
     df['file_extension'] = df['source'].apply(get_file_extension)
