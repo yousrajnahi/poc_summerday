@@ -1,7 +1,8 @@
 import streamlit as st
 from src.utils import initialize_vector_store
 from src.vector_store import get_data_in_vector_store
-from src.displays import vectordb_to_dfdb, df_visualisation, create_2d_embeddings
+from src.displays import vectordb_to_dfdb, df_visualisation, create_2d_embeddings, get_file_extension
+import plotly.express as px
 import numpy as np
 np.random.seed(42)
 
@@ -46,6 +47,19 @@ if st.sidebar.button("View Data") or 'data_viz_df' in st.session_state:
     with st.spinner("Generating visualization..."):
         fig = df_visualisation(df)
     
+    st.plotly_chart(fig)
+    
+    df['file_extension'] = df['source'].apply(get_file_extension)
+    # Count file extensions
+    extension_counts = df['file_extension'].value_counts()
+    # Create pie chart
+    st.subheader("Distribution of File Types")
+    fig = px.pie(
+        values=extension_counts.values,
+        names=extension_counts.index,
+        title="File Types Distribution",
+        labels={'label': 'File Extension', 'value': 'Count'}
+    )
     st.plotly_chart(fig)
 
 
