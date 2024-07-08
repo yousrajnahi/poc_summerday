@@ -60,3 +60,7 @@ def df_visualisation(df):
   fig.update_traces(marker=dict(opacity=0.7,line=dict(width=0.5), sizemode='diameter'), selector=dict(mode="markers"))
   fig.update_layout(legend_title_text="<b>Chunk source</b>", title="<b>2D Projection of Chunk Embeddings via PaCMAP</b>")
   return fig
+
+# Extract file extensions
+def get_file_extension(filename):
+    return filename.split('.')[-1] if filename else 'query'
