@@ -112,7 +112,7 @@ elif upload_type == "arXiv":
             arxiv_documents = loader.load()
              # Add source metadata to each document
             for doc in arxiv_documents:
-                doc['metadata']['source'] = "arXiv/" + doc['metadata']['Title']+'/'+ arxiv_query
+                doc.metadata['source'] = "arXiv/" + doc.metadata['Title']+'/'+ arxiv_query
             arxiv_chunks = split_documents(arxiv_documents, text_splitter_map, 'default')
             db.add_documents(arxiv_chunks)
             st.success(f"arXiv content for '{arxiv_query}' added to the vector store.")
