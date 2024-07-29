@@ -96,7 +96,7 @@ elif upload_type == "YouTube":
             youtube_documents = loader.load()
              # Add source metadata to each document
             for doc in youtube_documents:
-                doc['metadata']['source'] = "youtube/" + youtube_url+ '/'+ doc['metadata']['source']
+                doc.metadata['source'] = "youtube/" + youtube_url+ '/'+ doc.metadata['source']
             youtube_chunks = split_documents(youtube_documents, text_splitter_map, 'default')
             db.add_documents(youtube_chunks)
             st.success(f"YouTube content from '{youtube_url}' added to the vector store.")
