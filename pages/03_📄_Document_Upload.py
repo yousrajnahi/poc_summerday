@@ -94,6 +94,9 @@ elif upload_type == "YouTube":
         with st.spinner("Loading YouTube content..."):
             loader = YoutubeLoader.from_youtube_url(youtube_url, add_video_info=add_video_info, language=language)
             youtube_documents = loader.load()
+             # Add source metadata to each document
+            for doc in youtube_documents:
+                doc['metadata']['source'] = "youtube/" + youtube_url+ '/'+ doc['metadata']['source']
             youtube_chunks = split_documents(youtube_documents, text_splitter_map, 'default')
             db.add_documents(youtube_chunks)
             st.success(f"YouTube content from '{youtube_url}' added to the vector store.")
@@ -107,6 +110,9 @@ elif upload_type == "arXiv":
         with st.spinner("Loading arXiv content..."):
             loader = ArxivLoader(query=arxiv_query, load_all_available_meta=load_all_available_meta, load_max_docs=load_max_docs)
             arxiv_documents = loader.load()
+             # Add source metadata to each document
+            for doc in arxiv_documents:
+                doc['metadata']['source'] = "arXiv/" + doc['metadata']['Title']+'/'+ arxiv_query
             arxiv_chunks = split_documents(arxiv_documents, text_splitter_map, 'default')
             db.add_documents(arxiv_chunks)
             st.success(f"arXiv content for '{arxiv_query}' added to the vector store.")
